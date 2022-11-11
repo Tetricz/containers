@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  techdns:
+    build:
+      context: .
+      args:
+        SDK_VERSION: 6.0-alpine
+        RUNTIME_VERSION: 6.0-alpine
+        TECHDNS_VERSION: master
+    container_name: Technitium-DNS-Server
+    restart: unless-stopped
+    network_mode: host
+    stdin_open: true
+    tty: true
+    environment:
+      - TZ=America/Chicago
+      - HOST_OS=linux
+#   ports:
+#     - "53:53/udp"
+#     - "53:53/tcp"
+#     - "5380:5380/tcp"
+#     - "67:67/udp"
+    volumes:
+      - .:/dns/config:delegated

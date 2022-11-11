@@ -1,0 +1,51 @@
+name: Docker Image CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    env:  
+      DOCKER_IMAGE: tetricz/nextcloud
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v3
+
+    - name: Docker Setup Buildx
+      uses: docker/setup-buildx-action@v2.0.0
+
+    - name: Prepare
+      if: success()
+      id: prepare
+      run: |
+        echo ::set-output name=docker_image::${DOCKER_IMAGE}
+        echo ::set-output name=version::${GITHUB_RUN_NUMBER}
+    - name: Docker Login
+      if: success()
+      run: |
+        echo "${DOCKER_PASSWORD}" | docker login ${DOCKER_REGISTRY} --username "${DOCKER_USERNAME}" --password-stdin
+        
+    - name: Run Buildx (build x86 image)
+      if: success()
+      run: |        
+        docker buildx build \
+                --build-arg NC_VERSION=24 \
+                --platform linux/amd64 \
+                --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}-amd64 \
+                --file ./Dockerfile \
+                --output type=image,push=true .
+
+    - name: Create Manifests
+      if: success()
+      run: |
+        docker manifest create ${{ steps.prepare.outputs.docker_image }}:latest ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}-amd64
+        docker manifest create ${{ steps.prepare.outputs.docker_image }}:24 ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}-amd64
+        docker manifest push ${{ steps.prepare.outputs.docker_image }}:latest
+        docker manifest push ${{ steps.prepare.outputs.docker_image }}:24

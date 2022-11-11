@@ -1,0 +1,59 @@
+name: Docker Image CI
+
+on:
+  schedule:
+  - cron: "0 2 */10 * *"
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    env:  
+      DOCKER_IMAGE: tetricz/yt-archive
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v3
+
+    - name: Docker Setup Buildx
+      uses: docker/setup-buildx-action@v2.0.0
+
+    - name: Prepare
+      if: success()
+      id: prepare
+      run: |
+        echo ::set-output name=docker_image::${DOCKER_IMAGE}
+        echo ::set-output name=version::${GITHUB_RUN_NUMBER}
+
+    - name: Docker Login
+      if: success()
+      run: |
+        echo "${DOCKER_PASSWORD}" | docker login ${DOCKER_REGISTRY} --username "${DOCKER_USERNAME}" --password-stdin
+        
+    - name: Run Buildx (build x86 image)
+      if: success()
+      run: |        
+        docker buildx build \
+                --build-arg GIT_BRANCH=release \
+                --platform linux/amd64 \
+                --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}-amd64 \
+                --file ./Dockerfile \
+                --output type=image,push=true .
+
+    - name: Run Buildx (build arm64 image)
+      if: success()
+      run: |        
+        docker buildx build \
+                --build-arg GIT_BRANCH=release \
+                --platform linux/arm64 \
+                --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}-arm64 \
+                --file ./Dockerfile \
+                --output type=image,push=true .
+
+    - name: Create Manifest
+      if: success()
+      run: |
+        docker manifest create ${{ steps.prepare.outputs.docker_image }}:latest ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}-amd64 ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}-arm64
+        docker manifest push ${{ steps.prepare.outputs.docker_image }}:latest
