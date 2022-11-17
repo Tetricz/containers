@@ -78,6 +78,11 @@ update-manifests:
 	docker manifest push tetricz/minecraft:latest
 	docker manifest push tetricz/fabric-auto:latest
 
+.PHONE: clean
+clean:
+	docker buildx prune -fa
+	docker system prune -fa
+
 ## Do everything
 .PHONY: all
-all: build-all push-all update-manifests
+all: build-all push-all update-manifests clean
