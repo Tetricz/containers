@@ -1,7 +1,6 @@
 # Maintainer https://github.com/Tetricz
-ARG OPENJDK_VERSION=17-alpine
-# https://hub.docker.com/_/openjdk
-FROM openjdk:${OPENJDK_VERSION}
+FROM ubuntu:jammy
+RUN apt-get update && apt-get upgrade -y && apt-get install openjdk-17-jre-headless -y && apt-get clean
 
 ENV MEMORY=2G \
     JARFILE=server.jar

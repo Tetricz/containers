@@ -1,9 +1,7 @@
 # Maintainer https://github.com/Tetricz
-ARG OPENJDK_VERSION=17-alpine
-# https://hub.docker.com/_/openjdk
-FROM openjdk:${OPENJDK_VERSION}
+FROM ubuntu:jammy
 
-RUN if [ $(uname -m) = "x86_64" ]; then apk add --no-cache gettext curl; else apt-get update && apt-get install gettext curl -y && apt-get clean; fi
+RUN apt-get update && apt-get upgrade -y && apt-get install gettext curl openjdk-17-jre-headless -y && apt-get clean
 
 ENV COMMAND_PREFIX='@mention' \
     ALT_COMMAND_PREFIX='' \

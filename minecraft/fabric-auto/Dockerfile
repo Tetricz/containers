@@ -1,8 +1,6 @@
 # Maintainer https://github.com/Tetricz
-ARG OPENJDK_VERSION=17-alpine
-# https://hub.docker.com/_/openjdk
-FROM openjdk:${OPENJDK_VERSION}
-RUN apk add --no-cache jq curl bash
+FROM ubuntu:jammy
+RUN apt-get update && apt-get upgrade -y && apt-get install jq curl bash openjdk-17-jre-headless -y && apt-get clean
 ENV MEMORY=2G
 
 COPY . /
