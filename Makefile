@@ -1,3 +1,7 @@
+## Echo options
+echo:
+	echo $(CC)
+
 ## Build images
 build-all:
 	COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build --parallel

@@ -4,28 +4,28 @@ version: "3.9"
 services:
   yt-archive-x86:
     build:
-      context: .
-      dockerfile: yt-archive/Dockerfile
+      context: yt-archive/
+      dockerfile: Dockerfile
     image: tetricz/yt-archive:amd64
     platform: linux/amd64
 
   openvpn-client-x86:
     build:
-      context: .
-      dockerfile: openvpn-client/Dockerfile
+      context: openvpn-client/
+      dockerfile: Dockerfile
     image: tetricz/openvpn-client:amd64
     platform: linux/amd64
 
   yt-archive-arm:
     build:
-      context: .
-      dockerfile: yt-archive/Dockerfile
+      context: ./yt-archive/
+      dockerfile: Dockerfile
     image: tetricz/yt-archive:arm64
     platform: linux/arm64
 
   openvpn-client-arm:
     build:
-      context: .
-      dockerfile: openvpn-client/Dockerfile
+      context: openvpn-client/
+      dockerfile: Dockerfile
     image: tetricz/openvpn-client:arm64
     platform: linux/arm64
