@@ -3,21 +3,16 @@ ARM_IMAGES := yt-archive-arm openvpn-client-arm jmusicbot-arm technitium-dns-ser
 
 ## Echo options
 .PHONY: help
-help: setup-buildx
+help:
 	@echo ""
 	@echo "Options:"
-	@echo "make build-x86	 # Build x86_64 images"
-	@echo "make build-arm	 # Build arm64 images"
-	@echo "make build-all 	 # Builds all images"
-	@echo "make push-x86	 # Push x86_64 images"
-	@echo "make push-arm	 # Push arm64 images"
-	@echo "make push-all  	 # Pushes all images | Build must be ran before push"
-	@echo "update-manifests  # Pushes manifests for all images | Push must be ran before manifests"
-
-## Setup buildx
-.PHONY: setup-buildx
-setup-buildx:
-	docker buildx create --name tetricz-containers --use
+	@echo "make build-x86	       # Build x86_64 images"
+	@echo "make build-arm	       # Build arm64 images"
+	@echo "make build-all 	       # Builds all images"
+	@echo "make push-x86	       # Push x86_64 images"
+	@echo "make push-arm	       # Push arm64 images"
+	@echo "make push-all  	       # Pushes all images | Build must be ran before push"
+	@echo "make update-manifests   # Pushes manifests for all images | Push must be ran before manifests"
 
 ## Build x86_64 images
 .PHONY: build-x86
