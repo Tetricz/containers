@@ -28,7 +28,7 @@ services:
     build:
       context: jmusic-bot/
       dockerfile: Dockerfile
-    image: tetricz/jmusicbot:amd64
+    image: tetricz/jmusic-bot:amd64
 
   technitium-dns-server-x86:
     build:
@@ -70,7 +70,7 @@ services:
     build:
       context: jmusic-bot/
       dockerfile: Dockerfile
-    image: tetricz/jmusicbot:arm64
+    image: tetricz/jmusic-bot:arm64
     platform: linux/arm64
 
   ## Nextcloud arm64 image is not supported yet
