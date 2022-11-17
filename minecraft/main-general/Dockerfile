@@ -1,7 +1,7 @@
 # Maintainer https://github.com/Tetricz
-ARG OPENJDK_VERSION=17-alpine
-# https://hub.docker.com/_/openjdk
-FROM openjdk:${OPENJDK_VERSION}
+FROM alpine:latest
+
+RUN apk add --no-cache openjdk17
 
 ENV MEMORY=2G \
     JARFILE=server.jar

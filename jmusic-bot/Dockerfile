@@ -1,9 +1,7 @@
 # Maintainer https://github.com/Tetricz
-ARG OPENJDK_VERSION=16-alpine
-# https://hub.docker.com/_/openjdk
-FROM openjdk:${OPENJDK_VERSION}
+FROM alpine:latest
 
-RUN if [ $(uname -m) = "x86_64" ]; then apk add --no-cache gettext curl; else apt-get update && apt-get install gettext curl -y && apt-get clean; fi
+RUN apk add --no-cache gettext curl openjdk17
 
 ENV COMMAND_PREFIX='@mention' \
     ALT_COMMAND_PREFIX='' \
