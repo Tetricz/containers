@@ -1,5 +1,9 @@
+X86_IMAGES := yt-archive-x86 openvpn-client-x86 nextcloud-x86 jmusicbot-x86 technitium-dns-server-x86 minecraft-general-x86 fabric-auto-x86
+ARM_IMAGES := yt-archive-arm openvpn-client-arm jmusicbot-arm technitium-dns-server-arm minecraft-general-arm fabric-auto-arm
+
 ## Echo options
-echo: setup-buildx
+.PHONY: help
+help: setup-buildx
 	@echo ""
 	@echo "Options:"
 	@echo "make build-x86	 # Build x86_64 images"
@@ -11,27 +15,32 @@ echo: setup-buildx
 	@echo "update-manifests  # Pushes manifests for all images | Push must be ran before manifests"
 
 ## Setup buildx
+.PHONY: setup-buildx
 setup-buildx:
 	docker buildx create --name tetricz-containers --use
 
 ## Build x86_64 images
+.PHONY: build-x86
 build-x86:
 	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --parallel --no-cache \
-	yt-archive-x86 openvpn-client-x86 nextcloud-x86 jmusicbot-x86 technitium-dns-server-x86 minecraft-general-x86 fabric-auto-x86
+	$(X86_IMAGES)
 
 ## Build arm64 images
+.PHONY: build-arm
 build-arm:
 	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --parallel --no-cache \
-	yt-archive-arm openvpn-client-arm jmusicbot-arm technitium-dns-server-arm minecraft-general-arm fabric-auto-arm
+	$(ARM_IMAGES)
 
 ## Build all images
+.PHONY: build-all
 build-all:
 	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --parallel --no-cache
 
 ## Push x86 images
+.PHONY: push-x86
 push-x86:
 	docker push tetricz/yt-archive-x86
 	docker push tetricz/openvpn-client-x86
@@ -42,6 +51,7 @@ push-x86:
 	docker push tetricz/fabric-auto-x86
 
 ## Push arm images
+.PHONY: push-arm
 push-arm:
 	docker push tetricz/yt-archive-arm
 	docker push tetricz/openvpn-client-arm
@@ -51,9 +61,11 @@ push-arm:
 	docker push tetricz/fabric-auto-arm
 
 ## Push all images
+.PHONY: push-all
 push-all: push-x86 push-arm
 
 ## Update manifests
+.PHONY: update-manifests
 update-manifests:
 	docker manifest create tetricz/yt-archive:latest tetricz/yt-archive:amd64 tetricz/yt-archive:arm64
 	docker manifest create tetricz/openvpn-client:latest tetricz/openvpn-client:amd64 tetricz/openvpn-client:arm64
@@ -74,4 +86,5 @@ update-manifests:
 	docker manifest push tetricz/fabric-auto:latest
 
 ## Do everything
+.PHONY: all
 all: build-all push-all update-manifests
