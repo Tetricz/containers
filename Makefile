@@ -62,7 +62,7 @@ update-manifests:
 	docker manifest create tetricz/openvpn-client:latest tetricz/openvpn-client:amd64 tetricz/openvpn-client:arm64
 	docker manifest create tetricz/nextcloud:24 tetricz/nextcloud:amd64
 	docker manifest create tetricz/nextcloud:latest tetricz/nextcloud:amd64
-	docker manifest create tetricz/jmusicbot:latest tetricz/jmusicbot:amd64 tetricz/jmusicbot:arm64
+	docker manifest create tetricz/jmusic-bot:latest tetricz/jmusic-bot:amd64 tetricz/jmusic-bot:arm64
 	docker manifest create tetricz/technitium-dns:latest tetricz/technitium-dns:amd64 tetricz/technitium-dns:arm64
 	docker manifest create tetricz/minecraft:latest tetricz/minecraft:amd64 tetricz/minecraft:arm64
 	docker manifest create tetricz/minecraft:fabric-auto tetricz/minecraft:fabric-amd64 tetricz/minecraft:fabric-arm64
@@ -71,7 +71,7 @@ update-manifests:
 	docker manifest push tetricz/openvpn-client:latest
 	docker manifest push tetricz/nextcloud:24
 	docker manifest push tetricz/nextcloud:latest
-	docker manifest push tetricz/jmusicbot:latest
+	docker manifest push tetricz/jmusic-bot:latest
 	docker manifest push tetricz/technitium-dns:latest
 	docker manifest push tetricz/minecraft:latest
 	docker manifest push tetricz/fabric-auto:latest
