@@ -70,6 +70,8 @@ services:
     build:
       context: jmusic-bot/
       dockerfile: Dockerfile
+      args:
+        - OPENJDK_VERSION=17
     image: tetricz/jmusicbot:arm64
     platform: linux/arm64
 
@@ -89,6 +91,8 @@ services:
     build:
       context: minecraft/main-general/
       dockerfile: Dockerfile
+      args:
+        - OPENJDK_VERSION=17
     image: tetricz/minecraft:arm64
     platform: linux/arm64
 
@@ -96,5 +100,7 @@ services:
     build:
       context: minecraft/fabric-auto/
       dockerfile: Dockerfile
+      args:
+        - OPENJDK_VERSION=17
     image: tetricz/minecraft:fabric-arm64
     platform: linux/arm64
