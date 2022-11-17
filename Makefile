@@ -1,5 +1,6 @@
 X86_IMAGES := yt-archive-x86 openvpn-client-x86 nextcloud-x86 jmusicbot-x86 technitium-dns-server-x86 minecraft-general-x86 fabric-auto-x86
 ARM_IMAGES := yt-archive-arm openvpn-client-arm jmusicbot-arm technitium-dns-server-arm minecraft-general-arm fabric-auto-arm
+IMAGE="" # Set this to the image you want to build (e.g. yt-archive-x86)
 
 ## Echo options
 .PHONY: help
@@ -14,6 +15,14 @@ help:
 	@echo "make push-all  	       # Pushes all images | Build must be ran before push"
 	@echo "make update-manifests   # Pushes manifests for all images | Push must be ran before manifests"
 
+.PHONY: build
+build:
+	@echo "Building $(IMAGE)"
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	$(IMAGE)
+
+
 ## Build x86_64 images
 .PHONY: build-x86
 build-x86:
@@ -24,14 +33,14 @@ build-x86:
 ## Build arm64 images
 .PHONY: build-arm
 build-arm:
-	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --parallel --no-cache \
 	$(ARM_IMAGES)
 
 ## Build all images
 .PHONY: build-all
 build-all:
-	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --parallel --no-cache
 
 ## Push x86 images
