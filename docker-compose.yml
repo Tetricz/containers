@@ -9,7 +9,6 @@ services:
       context: yt-archive/
       dockerfile: Dockerfile
     image: tetricz/yt-archive:amd64
-    platform: linux/amd64
 
   openvpn-client-x86:
     build:
@@ -52,6 +51,7 @@ services:
       dockerfile: Dockerfile
     image: tetricz/minecraft:fabric-amd64
 
+  ## ARM64 IMAGES
   yt-archive-arm:
     build:
       context: ./yt-archive/
@@ -64,4 +64,37 @@ services:
       context: openvpn-client/
       dockerfile: Dockerfile
     image: tetricz/openvpn-client:arm64
+    platform: linux/arm64
+
+  jmusicbot-arm:
+    build:
+      context: jmusicbot/
+      dockerfile: Dockerfile
+    image: tetricz/jmusicbot:arm64
+    platform: linux/arm64
+
+  ## Nextcloud arm64 image is not supported yet
+
+  technitium-dns-server-arm:
+    build:
+      context: technitium-dns-server/
+      dockerfile: Dockerfile
+      args:
+        - SDK_VERSION=6.0
+        - RUNTIME_VERSION=6.0
+    image: tetricz/technitium-dns-server:arm64
+    platform: linux/arm64
+
+  minecraft-general-arm:
+    build:
+      context: minecraft/main-general/
+      dockerfile: Dockerfile
+    image: tetricz/minecraft:arm64
+    platform: linux/arm64
+
+  fabric-auto-arm:
+    build:
+      context: minecraft/fabric-auto/
+      dockerfile: Dockerfile
+    image: tetricz/minecraft:fabric-arm64
     platform: linux/arm64
