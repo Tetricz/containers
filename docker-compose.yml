@@ -2,6 +2,8 @@
 version: "3.9"
 
 services:
+
+  ## X86_64 IMAGES
   yt-archive-x86:
     build:
       context: yt-archive/
@@ -14,7 +16,41 @@ services:
       context: openvpn-client/
       dockerfile: Dockerfile
     image: tetricz/openvpn-client:amd64
-    platform: linux/amd64
+
+  nextcloud-x86:
+    build:
+      context: nextcloud/
+      dockerfile: Dockerfile
+      args:
+        - NC_VERSION=24
+    image: tetricz/nextcloud:amd64
+
+  jmusicbot-x86:
+    build:
+      context: jmusicbot/
+      dockerfile: Dockerfile
+    image: tetricz/jmusicbot:amd64
+
+  technitium-dns-server-x86:
+    build:
+      context: technitium-dns-server/
+      dockerfile: Dockerfile
+      args:
+        - SDK_VERSION=6.0-alpine
+        - RUNTIME_VERSION=6.0-alpine
+    image: tetricz/technitium-dns-server:amd64
+
+  minecraft-general-x86:
+    build:
+      context: minecraft/main-general/
+      dockerfile: Dockerfile
+    image: tetricz/minecraft:amd64
+
+  fabric-auto-x86:
+    build:
+      context: minecraft/fabric-auto/
+      dockerfile: Dockerfile
+    image: tetricz/minecraft:fabric-amd64
 
   yt-archive-arm:
     build:
