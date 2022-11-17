@@ -74,7 +74,7 @@ update-manifests:
 	docker manifest push tetricz/jmusic-bot:latest
 	docker manifest push tetricz/technitium-dns:latest
 	docker manifest push tetricz/minecraft:latest
-	docker manifest push tetricz/fabric-auto:latest
+	docker manifest push tetricz/minecraft:fabric-auto
 
 .PHONE: clean
 clean:
