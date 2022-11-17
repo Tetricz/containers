@@ -1,6 +1,8 @@
 # Maintainer https://github.com/Tetricz
-FROM ubuntu:jammy
-RUN apt-get update && apt-get upgrade -y && apt-get install jq curl bash openjdk-17-jre-headless -y && apt-get clean
+FROM alpine:latest
+
+RUN apk add --no-cache jq curl bash openjdk17
+
 ENV MEMORY=2G
 
 COPY . /

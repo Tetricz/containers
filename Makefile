@@ -18,7 +18,7 @@ help:
 .PHONY: build
 build:
 	@echo "Building $(IMAGE)"
-	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --no-cache \
 	$(IMAGE)
 
@@ -33,7 +33,7 @@ build-x86:
 ## Build arm64 images
 .PHONY: build-arm
 build-arm:
-	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --parallel --no-cache \
 	$(ARM_IMAGES)
 

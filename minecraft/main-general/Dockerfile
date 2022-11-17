@@ -1,6 +1,7 @@
 # Maintainer https://github.com/Tetricz
-FROM ubuntu:jammy
-RUN apt-get update && apt-get upgrade -y && apt-get install openjdk-17-jre-headless -y && apt-get clean
+FROM alpine:latest
+
+RUN apk add --no-cache openjdk17
 
 ENV MEMORY=2G \
     JARFILE=server.jar

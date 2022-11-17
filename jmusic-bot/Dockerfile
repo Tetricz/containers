@@ -1,7 +1,7 @@
 # Maintainer https://github.com/Tetricz
-FROM ubuntu:jammy
+FROM alpine:latest
 
-RUN apt-get update && apt-get upgrade -y && apt-get install gettext curl openjdk-17-jre-headless -y && apt-get clean
+RUN apk add --no-cache gettext curl openjdk17
 
 ENV COMMAND_PREFIX='@mention' \
     ALT_COMMAND_PREFIX='' \
