@@ -1,13 +1,13 @@
 ## Echo options
 echo: setup-buildx
-	echo "Options:"
-	echo "make build-x86	 # Build x86_64 images"
-	echo "make build-arm	 # Build arm64 images"
-	echo "make build-all 	 # Builds all images"
-	echo "make push-x86	 	 # Push x86_64 images"
-	echo "make push-arm	 	 # Push arm64 images"
-	echo "make push-all  	 # Pushes all images | Build must be ran before push"
-	echo "update-manifests   # Pushes manifests for all images | Push must be ran before manifests"
+	"Options:"
+	"make build-x86	 	 # Build x86_64 images"
+	"make build-arm	 	 # Build arm64 images"
+	"make build-all 	 # Builds all images"
+	"make push-x86	 	 # Push x86_64 images"
+	"make push-arm	 	 # Push arm64 images"
+	"make push-all  	 # Pushes all images | Build must be ran before push"
+	"update-manifests    # Pushes manifests for all images | Push must be ran before manifests"
 
 ## Setup buildx
 setup-buildx:
