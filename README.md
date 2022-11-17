@@ -18,3 +18,9 @@
 ```bash
 make help
 ```
+
+To build a specific IMAGE, run; where service is one in the docker-compose.yml:
+
+```bash
+make build IMAGE=service
+```

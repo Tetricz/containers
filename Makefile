@@ -5,15 +5,18 @@ IMAGE="" # Set this to the image you want to build (e.g. yt-archive-x86)
 ## Echo options
 .PHONY: help
 help:
+	@echo "This depends on the buildx engine for cross architecture builds."
 	@echo ""
 	@echo "Options:"
-	@echo "make build-x86	       # Build x86_64 images"
-	@echo "make build-arm	       # Build arm64 images"
-	@echo "make build-all 	       # Builds all images"
-	@echo "make push-x86	       # Push x86_64 images"
-	@echo "make push-arm	       # Push arm64 images"
-	@echo "make push-all  	       # Pushes all images | Build must be ran before push"
-	@echo "make update-manifests   # Pushes manifests for all images | Push must be ran before manifests"
+	@echo "make build IMAGE=yt-archive-x86		# Build a specific image"
+	@echo "make build-x86	       				# Build x86_64 images"
+	@echo "make build-arm	       				# Build arm64 images"
+	@echo "make build-all 	       				# Builds all images"
+	@echo "make push-x86	       				# Push x86_64 images"
+	@echo "make push-arm	       				# Push arm64 images"
+	@echo "make push-all  	       				# Pushes all images | Build must be ran before push"
+	@echo "make update-manifests   				# Pushes manifests for all images | Push must be ran before manifests"
+	@echo "make clean	           				# Removes all images"
 
 .PHONY: build
 build:
@@ -56,6 +59,7 @@ push-arm:
 push-all: push-x86 push-arm
 
 ## Update manifests
+## All images must be pushed before manifests can be updated
 .PHONY: update-manifests
 update-manifests:
 	docker manifest create tetricz/yt-archive:latest tetricz/yt-archive:amd64 tetricz/yt-archive:arm64 --amend
