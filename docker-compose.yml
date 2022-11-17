@@ -26,7 +26,7 @@ services:
 
   jmusicbot-x86:
     build:
-      context: jmusicbot/
+      context: jmusic-bot/
       dockerfile: Dockerfile
     image: tetricz/jmusicbot:amd64
 
@@ -68,7 +68,7 @@ services:
 
   jmusicbot-arm:
     build:
-      context: jmusicbot/
+      context: jmusic-bot/
       dockerfile: Dockerfile
     image: tetricz/jmusicbot:arm64
     platform: linux/arm64
