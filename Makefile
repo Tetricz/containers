@@ -39,9 +39,7 @@ build-arm:
 
 ## Build all images
 .PHONY: build-all
-build-all:
-	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
-	docker compose build --parallel --no-cache
+build-all: build-x86 build-arm
 
 ## Push x86 images
 .PHONY: push-x86
