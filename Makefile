@@ -42,23 +42,12 @@ build-all:
 ## Push x86 images
 .PHONY: push-x86
 push-x86:
-	docker push tetricz/yt-archive-x86
-	docker push tetricz/openvpn-client-x86
-	docker push tetricz/nextcloud-x86
-	docker push tetricz/jmusicbot-x86
-	docker push tetricz/technitium-dns-server-x86
-	docker push tetricz/minecraft-general-x86
-	docker push tetricz/fabric-auto-x86
+	docker compose push $(X86_IMAGES)
 
 ## Push arm images
 .PHONY: push-arm
 push-arm:
-	docker push tetricz/yt-archive-arm
-	docker push tetricz/openvpn-client-arm
-	docker push tetricz/jmusicbot-arm
-	docker push tetricz/technitium-dns-server-arm
-	docker push tetricz/minecraft-general-arm
-	docker push tetricz/fabric-auto-arm
+	docker compose push $(ARM_IMAGES)
 
 ## Push all images
 .PHONY: push-all
