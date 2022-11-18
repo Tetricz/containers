@@ -25,7 +25,7 @@ help:
 nextcloud:
 	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --no-cache \
-	$(NC)
+	nextcloud-x86
 	docker push $(NC_PUSH)
 	docker manifest create tetricz/nextcloud:latest $(NC_PUSH) --amend
 	docker manifest push tetricz/nextcloud:latest
