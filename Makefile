@@ -2,6 +2,9 @@ X86_IMAGES := yt-archive-x86 openvpn-client-x86 nextcloud-x86 jmusicbot-x86 tech
 ARM_IMAGES := yt-archive-arm openvpn-client-arm jmusicbot-arm technitium-dns-server-arm minecraft-general-arm fabric-auto-arm
 IMAGE="" # Set this to the image you want to build (e.g. yt-archive-x86)
 
+NC_PUSH := tetricz/nextcloud:amd64
+YT_PUSH := tetricz/yt-archive:amd64 tetricz/yt-archive:arm
+
 ## Echo options
 .PHONY: help
 help:
@@ -17,6 +20,27 @@ help:
 	@echo "make push-all  	       				# Pushes all images | Build must be ran before push"
 	@echo "make update-manifests   				# Pushes manifests for all images | Push must be ran before manifests"
 	@echo "make clean	           				# Removes all images"
+
+.PHONY: nextcloud
+nextcloud:
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	nextcloud-x86
+	docker push $(NC_PUSH)
+	docker manifest create tetricz/nextcloud:latest $(NC_PUSH) --amend
+	docker manifest push tetricz/nextcloud:latest
+
+.PHONY: yt-archive
+yt-archive:
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	yt-archive-x86
+	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	yt-archive-arm
+	docker push $(YT_PUSH)
+	docker manifest create tetricz/yt-archive:latest $(YT_PUSH) --amend
+	docker manifest push tetricz/yt-archive:latest
 
 .PHONY: build
 build:
