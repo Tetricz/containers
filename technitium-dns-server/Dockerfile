@@ -1,8 +1,8 @@
 # Maintainer https://github.com/Tetricz
 # https://hub.docker.com/_/microsoft-dotnet-sdk
 # https://hub.docker.com/_/microsoft-dotnet-runtime/
-ARG SDK_VERSION=6.0
-ARG RUNTIME_VERSION=6.0
+ARG SDK_VERSION=7.0
+ARG RUNTIME_VERSION=7.0
 
 FROM alpine:latest as downloader
 # https://github.com/TechnitiumSoftware/DnsServer

@@ -35,8 +35,8 @@ services:
       context: technitium-dns-server/
       dockerfile: Dockerfile
       args:
-        - SDK_VERSION=6.0-alpine
-        - RUNTIME_VERSION=6.0-alpine
+        - SDK_VERSION=7.0-alpine
+        - RUNTIME_VERSION=7.0-alpine
     image: tetricz/technitium-dns:amd64
 
   minecraft-general-x86:
@@ -80,8 +80,8 @@ services:
       context: technitium-dns-server/
       dockerfile: Dockerfile
       args:
-        - SDK_VERSION=6.0
-        - RUNTIME_VERSION=6.0
+        - SDK_VERSION=7.0
+        - RUNTIME_VERSION=7.0
     image: tetricz/technitium-dns:arm64
     platform: linux/arm64
 
