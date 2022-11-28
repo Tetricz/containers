@@ -8,9 +8,9 @@ FROM alpine:latest as downloader
 # https://github.com/TechnitiumSoftware/DnsServer
 ARG TECHDNS_VERSION=master
 RUN apk add --no-cache curl unzip \
- && curl -L https://github.com/TechnitiumSoftware/TechnitiumLibrary/archive/refs/heads/master.zip -o techlibrary.zip \
+ && curl -L --connect-timeout 5 --retry 5 --retry-delay 0 https://github.com/TechnitiumSoftware/TechnitiumLibrary/archive/refs/heads/master.zip -o techlibrary.zip \
  && unzip *library.zip \
- && curl -L https://github.com/TechnitiumSoftware/DnsServer/archive/refs/heads/${TECHDNS_VERSION}.zip -o techdns.zip \
+ && curl -L --connect-timeout 5 --retry 5 --retry-delay 0 https://github.com/TechnitiumSoftware/DnsServer/archive/refs/heads/${TECHDNS_VERSION}.zip -o techdns.zip \
  && unzip *dns.zip
 
 FROM mcr.microsoft.com/dotnet/sdk:${SDK_VERSION} as builder
