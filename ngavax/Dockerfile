@@ -1,7 +1,7 @@
 # Maintainer https://github.com/Tetricz
 FROM alpine:latest
 
-RUN apk add --no-cache openjdk17
+RUN apk add --no-cache openjdk17 curl
 
 RUN mkdir /app && \
     cd /app && \
