@@ -1,0 +1,53 @@
+{
+    "worker_threads": 12,
+    "log_level": "info",
+    "log_file": "/var/log/ngavax.log",
+    "domains": [
+        {
+            "id": "static.tower.localdomain",
+            "listen": [
+                80,
+                443
+            ],
+            "dirblock": false,
+            "locations": [
+                {
+                    "directory": "/",
+                    "type": "static",
+                    "serve": "/app/www/"
+                },
+                {
+                    "directory": "/ftp/",
+                    "type": "static",
+                    "serve": "/app/www/",
+                    "autoindex": true
+                },
+                {
+                    "directory": "/image",
+                    "type": "static",
+                    "serve": "/app/www/example.jpg"
+                },
+                {
+                    "directory": "/helloweb/",
+                    "type": "proxy",
+                    "serve": "http://david-windows.localdomain:8080/"
+                }
+            ]
+        },
+        {
+            "id": "proxy.tower.localdomain",
+            "listen": [
+                80,
+                443
+            ],
+            "dirblock": true,
+            "locations": [
+                {
+                    "directory": "/",
+                    "type": "proxy",
+                    "serve": "http://david-windows.localdomain:8080/"
+                }
+            ]
+        }
+    ]
+}
