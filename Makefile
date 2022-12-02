@@ -2,9 +2,9 @@ X86_IMAGES := yt-archive-x86 openvpn-client-x86 nextcloud-x86 jmusicbot-x86 tech
 ARM_IMAGES := yt-archive-arm openvpn-client-arm jmusicbot-arm technitium-dns-server-arm minecraft-general-arm fabric-auto-arm
 IMAGE="" # Set this to the image you want to build (e.g. yt-archive-x86)
 
-NC_PUSH := tetricz/nextcloud:amd64
-YT_PUSH := tetricz/yt-archive:amd64 tetricz/yt-archive:arm64
-TD_PUSH := tetricz/technitium-dns-server:amd64 tetricz/technitium-dns-server:arm64
+NC_PUSH := nextcloud-x86
+YT_PUSH := yt-archive-x86 yt-archive-arm
+TD_PUSH := technitium-dns-server-x86 technitium-dns-server-arm
 
 ## Echo options
 .PHONY: help
@@ -27,7 +27,7 @@ nextcloud:
 	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --no-cache \
 	nextcloud-x86
-	docker push $(NC_PUSH)
+	docker compose push $(NC_PUSH)
 	docker manifest create tetricz/nextcloud:latest $(NC_PUSH) --amend
 	docker manifest push tetricz/nextcloud:latest
 
@@ -39,7 +39,7 @@ yt-archive:
 	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --no-cache \
 	yt-archive-arm
-	docker push $(YT_PUSH)
+	docker compose push $(YT_PUSH)
 	docker manifest create tetricz/yt-archive:latest $(YT_PUSH) --amend
 	docker manifest push tetricz/yt-archive:latest
 
@@ -51,7 +51,7 @@ techdns:
 	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --no-cache \
 	technitium-dns-server-arm
-	docker push $(TD_PUSH)
+	docker compose push $(TD_PUSH)
 	docker manifest create tetricz/technitium-dns-server:latest $(TD_PUSH) --amend
 	docker manifest push tetricz/technitium-dns-server:latest
 
