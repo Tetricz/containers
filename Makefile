@@ -74,7 +74,7 @@ minecraft:
 
 
 .PHONY: openvpn
-openvpn-client:
+openvpn:
 	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --no-cache \
 	openvpn-client-x86
