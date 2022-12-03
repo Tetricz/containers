@@ -5,7 +5,9 @@ IMAGE="" # Set this to the image you want to build (e.g. yt-archive-x86)
 NC_MANIFEST:= tetricz/nextcloud:amd64
 YT_MANIFEST:= tetricz/yt-archive:amd64 tetricz/yt-archive:arm64
 TD_MANIFEST := tetricz/technitium-dns:amd64 tetricz/technitium-dns:arm64
-MC_MANIFEST := tetricz/minecraft:amd64 tetricz/minecraft:arm64 tetricz/minecraft:fabric-amd64 tetricz/minecraft:fabric-arm64
+MC_MANIFEST := tetricz/minecraft:amd64 tetricz/minecraft:arm64
+FBR_MANIFEST := tetricz/minecraft:fabric-amd64 tetricz/minecraft:fabric-arm64
+VPN_MANIFEST := tetricz/openvpn:amd64 tetricz/openvpn:arm64
 
 ## Echo options
 .PHONY: help
@@ -55,6 +57,20 @@ techdns:
 	docker compose push technitium-dns-server-x86 technitium-dns-server-arm
 	docker manifest create tetricz/technitium-dns:latest $(TD_MANIFEST) --amend
 	docker manifest push tetricz/technitium-dns:latest
+
+.PHONY: minecraft
+minecraft:
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	minecraft-general-x86 fabric-auto-x86
+	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	minecraft-general-arm fabric-auto-arm
+	docker compose push minecraft-general-x86 minecraft-general-arm fabric-auto-x86 fabric-auto-arm
+	docker manifest create tetricz/minecraft:latest $(MC_MANIFEST) --amend
+	docker manifest create tetricz/minecraft:fabric-auto $(FBR_MANIFEST) --amend
+	docker manifest push tetricz/minecraft:latest
+	docker manifest push tetricz/minecraft:fabric-auto
 
 .PHONY: build
 build:
