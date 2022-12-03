@@ -7,7 +7,7 @@ YT_MANIFEST:= tetricz/yt-archive:amd64 tetricz/yt-archive:arm64
 TD_MANIFEST := tetricz/technitium-dns:amd64 tetricz/technitium-dns:arm64
 MC_MANIFEST := tetricz/minecraft:amd64 tetricz/minecraft:arm64
 FBR_MANIFEST := tetricz/minecraft:fabric-amd64 tetricz/minecraft:fabric-arm64
-VPN_MANIFEST := tetricz/openvpn:amd64 tetricz/openvpn:arm64
+VPN_MANIFEST := tetricz/openvpn-client:amd64 tetricz/openvpn-client:arm64
 
 ## Echo options
 .PHONY: help
@@ -71,6 +71,19 @@ minecraft:
 	docker manifest create tetricz/minecraft:fabric-auto $(FBR_MANIFEST) --amend
 	docker manifest push tetricz/minecraft:latest
 	docker manifest push tetricz/minecraft:fabric-auto
+
+
+.PHONY: openvpn
+openvpn-client:
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	openvpn-client-x86
+	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	openvpn-client-arm
+	docker compose push openvpn-client-x86 openvpn-client-arm
+	docker manifest create tetricz/openvpn-client:latest $(VPN_MANIFEST) --amend
+	docker manifest push tetricz/openvpn-client:latest
 
 .PHONY: build
 build:
