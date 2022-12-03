@@ -4,7 +4,7 @@ IMAGE="" # Set this to the image you want to build (e.g. yt-archive-x86)
 
 NC_PUSH := tetricz/nextcloud:amd64
 YT_PUSH := tetricz/yt-archive:amd64 tetricz/yt-archive:arm64
-TD_PUSH := tetricz/technitium-dns-server:amd64 tetricz/technitium-dns-server:arm64
+TD_PUSH := tetricz/technitium-dns:amd64 tetricz/technitium-dns:arm64
 
 ## Echo options
 .PHONY: help
