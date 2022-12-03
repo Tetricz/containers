@@ -52,8 +52,8 @@ techdns:
 #	docker compose build --no-cache \
 #	technitium-dns-server-arm
 	docker compose push technitium-dns-server-x86 technitium-dns-server-arm
-	docker manifest create tetricz/technitium-dns-server:latest $(TD_PUSH) --amend
-	docker manifest push tetricz/technitium-dns-server:latest
+	docker manifest create tetricz/technitium-dns:latest $(TD_PUSH) --amend
+	docker manifest push tetricz/technitium-dns:latest
 
 .PHONY: build
 build:
