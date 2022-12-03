@@ -48,9 +48,9 @@ techdns:
 	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --no-cache \
 	technitium-dns-server-x86
-	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
-	docker compose build --no-cache \
-	technitium-dns-server-arm
+#	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+#	docker compose build --no-cache \
+#	technitium-dns-server-arm
 	docker compose push technitium-dns-server-x86 technitium-dns-server-arm
 	docker manifest create tetricz/technitium-dns-server:latest $(TD_PUSH) --amend
 	docker manifest push tetricz/technitium-dns-server:latest
