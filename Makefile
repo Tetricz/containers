@@ -52,6 +52,7 @@ techdns:
 	docker compose build --no-cache \
 	technitium-dns-server-x86
 # Currently build the arm image on a raspberry pi, then push it and pull here for manifest
+# https://github.com/NuGet/Home/issues/12227
 	docker compose pull technitium-dns-server-arm
 #	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 #	docker compose build --no-cache \
