@@ -2,8 +2,12 @@ X86_IMAGES := yt-archive-x86 openvpn-client-x86 nextcloud-x86 jmusicbot-x86 tech
 ARM_IMAGES := yt-archive-arm openvpn-client-arm jmusicbot-arm technitium-dns-server-arm minecraft-general-arm fabric-auto-arm
 IMAGE="" # Set this to the image you want to build (e.g. yt-archive-x86)
 
-NC_PUSH := tetricz/nextcloud:amd64
-YT_PUSH := tetricz/yt-archive:amd64 tetricz/yt-archive:arm
+NC_MANIFEST:= tetricz/nextcloud:amd64
+YT_MANIFEST:= tetricz/yt-archive:amd64 tetricz/yt-archive:arm64
+TD_MANIFEST := tetricz/technitium-dns:amd64 tetricz/technitium-dns:arm64
+MC_MANIFEST := tetricz/minecraft:amd64 tetricz/minecraft:arm64
+FBR_MANIFEST := tetricz/minecraft:fabric-amd64 tetricz/minecraft:fabric-arm64
+VPN_MANIFEST := tetricz/openvpn-client:amd64 tetricz/openvpn-client:arm64
 
 ## Echo options
 .PHONY: help
@@ -26,8 +30,8 @@ nextcloud:
 	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --no-cache \
 	nextcloud-x86
-	docker push $(NC_PUSH)
-	docker manifest create tetricz/nextcloud:latest $(NC_PUSH) --amend
+	docker compose push nextcloud-x86
+	docker manifest create tetricz/nextcloud:latest $(NC_MANIFEST) --amend
 	docker manifest push tetricz/nextcloud:latest
 
 .PHONY: yt-archive
@@ -38,9 +42,50 @@ yt-archive:
 	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 	docker compose build --no-cache \
 	yt-archive-arm
-	docker push $(YT_PUSH)
-	docker manifest create tetricz/yt-archive:latest $(YT_PUSH) --amend
+	docker compose push yt-archive-x86 yt-archive-arm
+	docker manifest create tetricz/yt-archive:latest $(YT_MANIFEST) --amend
 	docker manifest push tetricz/yt-archive:latest
+
+.PHONY: techdns
+techdns:
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	technitium-dns-server-x86
+# Currently build the arm image on a raspberry pi, then push it and pull here for manifest
+	docker compose pull technitium-dns-server-arm
+#	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+#	docker compose build --no-cache \
+#	technitium-dns-server-arm
+	docker compose push technitium-dns-server-x86 technitium-dns-server-arm
+	docker manifest create tetricz/technitium-dns:latest $(TD_MANIFEST) --amend
+	docker manifest push tetricz/technitium-dns:latest
+
+.PHONY: minecraft
+minecraft:
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	minecraft-general-x86 fabric-auto-x86
+	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	minecraft-general-arm fabric-auto-arm
+	docker compose push minecraft-general-x86 minecraft-general-arm fabric-auto-x86 fabric-auto-arm
+	docker manifest create tetricz/minecraft:latest $(MC_MANIFEST) --amend
+	docker manifest create tetricz/minecraft:fabric-auto $(FBR_MANIFEST) --amend
+	docker manifest push tetricz/minecraft:latest
+	docker manifest push tetricz/minecraft:fabric-auto
+
+
+.PHONY: openvpn
+openvpn:
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	openvpn-client-x86
+	DOCKER_DEFAULT_PLATFORM=linux/arm64 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+	docker compose build --no-cache \
+	openvpn-client-arm
+	docker compose push openvpn-client-x86 openvpn-client-arm
+	docker manifest create tetricz/openvpn-client:latest $(VPN_MANIFEST) --amend
+	docker manifest push tetricz/openvpn-client:latest
 
 .PHONY: build
 build:

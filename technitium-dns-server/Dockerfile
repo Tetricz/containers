@@ -1,16 +1,16 @@
 # Maintainer https://github.com/Tetricz
 # https://hub.docker.com/_/microsoft-dotnet-sdk
 # https://hub.docker.com/_/microsoft-dotnet-runtime/
-ARG SDK_VERSION=6.0
-ARG RUNTIME_VERSION=6.0
+ARG SDK_VERSION=7.0
+ARG RUNTIME_VERSION=7.0
 
 FROM alpine:latest as downloader
 # https://github.com/TechnitiumSoftware/DnsServer
 ARG TECHDNS_VERSION=master
 RUN apk add --no-cache curl unzip \
- && curl -L https://github.com/TechnitiumSoftware/TechnitiumLibrary/archive/refs/heads/master.zip -o techlibrary.zip \
+ && curl -L --connect-timeout 5 --retry 5 --retry-delay 0 https://github.com/TechnitiumSoftware/TechnitiumLibrary/archive/refs/heads/master.zip -o techlibrary.zip \
  && unzip *library.zip \
- && curl -L https://github.com/TechnitiumSoftware/DnsServer/archive/refs/heads/${TECHDNS_VERSION}.zip -o techdns.zip \
+ && curl -L --connect-timeout 5 --retry 5 --retry-delay 0 https://github.com/TechnitiumSoftware/DnsServer/archive/refs/heads/${TECHDNS_VERSION}.zip -o techdns.zip \
  && unzip *dns.zip
 
 FROM mcr.microsoft.com/dotnet/sdk:${SDK_VERSION} as builder
