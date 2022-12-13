@@ -49,6 +49,11 @@ services:
     build:
       context: minecraft/fabric-auto/
       dockerfile: Dockerfile
+      args:
+        - MC_VERSION=1.19.3
+        - FAB_LOADER_VERSION=0.14.11
+        - INSTALLER_VERSION=0.11.1
+        - VANILLA_OBJ_ID=c9df48efed58511cdd0213c56b9013a7b5c9ac1f
     image: tetricz/minecraft:fabric-amd64
 
   ## ARM64 IMAGES
@@ -96,5 +101,10 @@ services:
     build:
       context: minecraft/fabric-auto/
       dockerfile: Dockerfile
+      args:
+        - MC_VERSION=1.19.3
+        - FAB_LOADER_VERSION=0.14.11
+        - INSTALLER_VERSION=0.11.1
+        - VANILLA_OBJ_ID=c9df48efed58511cdd0213c56b9013a7b5c9ac1f
     image: tetricz/minecraft:fabric-arm64
     platform: linux/arm64
