@@ -21,8 +21,8 @@ services:
       context: nextcloud/
       dockerfile: Dockerfile
       args:
-        - NC_VERSION=24
-    image: tetricz/nextcloud:amd64
+        - NC_VERSION=25
+    image: tetricz/nextcloud:25-amd64
 
   jmusicbot-x86:
     build:
