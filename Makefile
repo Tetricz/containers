@@ -33,6 +33,7 @@ nextcloud:
 	docker compose push nextcloud-x86
 	docker manifest create tetricz/nextcloud:latest $(NC_MANIFEST) --amend
 	docker manifest push tetricz/nextcloud:latest
+	docker manifest rm tetricz/nextcloud:latest
 
 .PHONY: yt-archive
 yt-archive:
@@ -45,6 +46,7 @@ yt-archive:
 	docker compose push yt-archive-x86 yt-archive-arm
 	docker manifest create tetricz/yt-archive:latest $(YT_MANIFEST) --amend
 	docker manifest push tetricz/yt-archive:latest
+	docker manifest rm tetricz/yt-archive:latest
 
 .PHONY: techdns
 techdns:
@@ -60,6 +62,7 @@ techdns:
 	docker compose push technitium-dns-server-x86 technitium-dns-server-arm
 	docker manifest create tetricz/technitium-dns:latest $(TD_MANIFEST) --amend
 	docker manifest push tetricz/technitium-dns:latest
+	docker manifest rm tetricz/technitium-dns:latest
 
 .PHONY: minecraft
 minecraft:
@@ -74,6 +77,8 @@ minecraft:
 	docker manifest create tetricz/minecraft:fabric-auto $(FBR_MANIFEST) --amend
 	docker manifest push tetricz/minecraft:latest
 	docker manifest push tetricz/minecraft:fabric-auto
+	docker manifest rm tetricz/minecraft:latest
+	docker manifest rm tetricz/minecraft:fabric-auto
 
 
 .PHONY: openvpn
@@ -87,6 +92,7 @@ openvpn:
 	docker compose push openvpn-client-x86 openvpn-client-arm
 	docker manifest create tetricz/openvpn-client:latest $(VPN_MANIFEST) --amend
 	docker manifest push tetricz/openvpn-client:latest
+	docker manifest rm tetricz/openvpn-client:latest
 
 .PHONY: build
 build:
@@ -147,6 +153,14 @@ update-manifests:
 	docker manifest push tetricz/technitium-dns:latest
 	docker manifest push tetricz/minecraft:latest
 	docker manifest push tetricz/minecraft:fabric-auto
+
+	docker manifest rm tetricz/yt-archive:latest
+	docker manifest rm tetricz/openvpn-client:latest
+	docker manifest rm tetricz/nextcloud:latest
+	docker manifest rm tetricz/jmusic-bot:latest
+	docker manifest rm tetricz/technitium-dns:latest
+	docker manifest rm tetricz/minecraft:latest
+	docker manifest rm tetricz/minecraft:fabric-auto
 
 .PHONE: clean
 clean:
