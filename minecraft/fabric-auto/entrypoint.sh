@@ -28,15 +28,16 @@ cp /minecraft/updater/modkeep /tmp/uptodate
 for file in $(ls /tmp/res/*res);
 do
     #takes api response from modrinth and parses
-    filename=$(cat $file | jq -cr '[.[] | {(.loaders[]): .game_versions[], filename: .files[].filename, url: .files[].url, sha512: .files[].hashes.sha512} | select(.fabric == "1.19.2")] | .[0].filename')
-    url=$(cat $file | jq -cr '[.[] | {(.loaders[]): .game_versions[], filename: .files[].filename, url: .files[].url, sha512: .files[].hashes.sha512} | select(.fabric == "1.19.2")] | .[0].url')
-    recorded_hash=$(cat $file | jq -cr '[.[] | {(.loaders[]): .game_versions[], filename: .files[].filename, url: .files[].url, sha512: .files[].hashes.sha512} | select(.fabric == "1.19.2")] | .[0].sha512')
+    echo "MC_VERSION specfied: ${ENV_MC_VERSION}"
+    filename=$(cat $file | jq -cr "[.[] | {(.loaders[]): .game_versions[], filename: .files[].filename, url: .files[].url, sha512: .files[].hashes.sha512} | select(.fabric == \"${ENV_MC_VERSION}\")] | .[0].filename")
+    url=$(cat $file | jq -cr "[.[] | {(.loaders[]): .game_versions[], filename: .files[].filename, url: .files[].url, sha512: .files[].hashes.sha512} | select(.fabric == \"${ENV_MC_VERSION}\")] | .[0].url")
+    recorded_hash=$(cat $file | jq -cr "[.[] | {(.loaders[]): .game_versions[], filename: .files[].filename, url: .files[].url, sha512: .files[].hashes.sha512} | select(.fabric == \"${ENV_MC_VERSION}\")] | .[0].sha512")
 
     #create sha512 file
     echo "${recorded_hash}  ${filename}" > $filename.sha512
     #markdown new files, so that we can remove the old ones
     echo "/minecraft/mods/$filename" >> uptodate
-    
+
     #check if current file is up to date
     sha512sum -c $filename.sha512
     #download new files and mv into mods folder

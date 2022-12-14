@@ -8,7 +8,8 @@ ARG VANILLA_OBJ_ID=c9df48efed58511cdd0213c56b9013a7b5c9ac1f
 
 RUN apk add --no-cache jq curl bash openjdk17
 
-ENV MEMORY=2G
+ENV MEMORY=2G \
+    ENV_MC_VERSION=$MC_VERSION
 
 COPY . /
 
