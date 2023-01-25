@@ -1,6 +1,7 @@
 pipeline {
     environment{
-        Blahblah=''
+        AMD64BUILD=''
+        ARM64BUILD=''
     }
     agent any
     stages {
@@ -8,7 +9,11 @@ pipeline {
             parallel {
                 stage('Start AMD64 build'){
                     steps{
-                        build 'yt-archive-amd64'
+                        script{
+                            def res = build 'yt-archive-amd64'
+                            echo "AMD64 build finished"
+                            AMD64BUILD=res.number
+                        }
                     }
                     post{
                         failure{
@@ -18,7 +23,11 @@ pipeline {
                 }
                 stage('Start ARM64 build'){
                     steps{
-                        build 'yt-archive-aarch64'
+                        script {
+                            def res = build 'yt-archive-aarch64'
+                            echo "ARM64 build finished"
+                            ARM64BUILD=res.number
+                        }
                     }
                     post{
                         failure{
@@ -29,27 +38,32 @@ pipeline {
             }
         }
 
-        stage('Pull images'){
+        stage('Update manifest'){
             steps{
                 script{
+                    echo "AMD64BUILD: ${AMD64BUILD}"
+                    echo "ARM64BUILD: ${ARM64BUILD}"
                     withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
-                        def registry_url = "registry.hub.docker.com/"
-                        sh "docker login -u $USER -p $PASSWORD ${registry_url}"
-                        sh "docker pull ${registry_url}tetricz/yt-archive:amd64-build-${env.BUILD_ID}"
-                        sh "docker pull ${registry_url}tetricz/yt-archive:aarch64-build-${env.BUILD_ID}"
+                        sh "echo $PASSWORD | docker login -u $USER --password-stdin"
+                        sh "docker pull tetricz/yt-archive:amd64-build-${AMD64BUILD} && docker pull tetricz/yt-archive:aarch64-build-${ARM64BUILD}"
+                        sh "docker manifest inspect tetricz/yt-archive:latest"
+                        sh "docker manifest create tetricz/yt-archive:latest tetricz/yt-archive:amd64-build-${AMD64BUILD} tetricz/yt-archive:aarch64-build-${ARM64BUILD}"
+                        sh "docker manifest push tetricz/yt-archive:latest"
+                        sh "docker manifest inspect tetricz/yt-archive:latest"
                     }
                 }
             }
-        }
-        stage('Update Manifest'){
-            steps{
-                echo "Updating manifest...First we test if this works as is"
-                echo "${env.BUILD_ID}"
+            post{
+                always{
+                    sh "docker manifest rm tetricz/yt-archive:latest"
+                    sh "docker logout"
+                }
             }
         }
     }
     post {
 		always {
+            sh 'docker system prune -fa'
 			sh 'docker logout'
 		}
 	}

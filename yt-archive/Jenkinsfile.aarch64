@@ -29,9 +29,8 @@ pipeline {
             steps{
                 script{
                     withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
-                        def registry_url = "registry.hub.docker.com/"
-                        sh "docker login -u $USER -p $PASSWORD ${registry_url}"
-                        docker.withRegistry("http://${registry_url}", "DockerhubCredentials") {
+                        sh "echo $PASSWORD | docker login -u $USER --password-stdin"
+                        docker.withRegistry('', "DockerhubCredentials") {
                             ContainerImage.push("aarch64-build-${env.BUILD_ID}")
                         }
                     }
