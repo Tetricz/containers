@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    environment{
+        ContainerImage=''
+    }
+
+    stages {
+        stage('Startup'){
+            steps {
+                echo "Running ${env.JOB_NAME} on ${env.NODE_NAME}"
+            }
+        }
+        stage('Checkout'){
+            steps {
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Tetricz/containers.git']])
+            }
+        }
+        stage('Build image'){
+            steps {
+                dir("yt-archive"){
+                    echo "Inside container directory, starting build..."
+                    script{
+                        ContainerImage = docker.build("tetricz/yt-archive")
+                    }
+                }
+            }
+        }
+        stage('Push image'){
+            steps{
+                script{
+                    withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
+                        def registry_url = "registry.hub.docker.com/"
+                        sh "docker login -u $USER -p $PASSWORD ${registry_url}"
+                        docker.withRegistry("http://${registry_url}", "DockerhubCredentials") {
+                            // Push your image now
+                            ContainerImage.push("${env.BUILD_ID}")
+                        }
+                    }
+                }
+            }
+        }
+        stage('Remove unused images'){
+            steps{
+                sh "docker system prune -fa"
+            }
+        }
+    }
+    post {
+		always {
+			sh 'docker logout'
+		}
+	}
+}
