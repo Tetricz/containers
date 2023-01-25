@@ -1,47 +1,50 @@
 pipeline {
-    agent any
     environment{
-        ContainerImage=''
+        Blahblah=''
     }
-
+    agent any
     stages {
-        stage('Startup'){
-            steps {
-                echo "Running ${env.JOB_NAME} on ${env.NODE_NAME}"
-            }
-        }
-        stage('Checkout'){
-            steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Tetricz/containers.git']])
-            }
-        }
-        stage('Build image'){
-            steps {
-                dir("yt-archive"){
-                    echo "Inside container directory, starting build..."
-                    script{
-                        ContainerImage = docker.build("tetricz/yt-archive")
+        stage('Parallel builds'){
+            parallel {
+                stage('Start AMD64 build'){
+                    steps{
+                        build 'yt-archive-amd64'
+                    }
+                    post{
+                        failure{
+                            echo "AMD64 build failed"
+                        }
                     }
                 }
-            }
-        }
-        stage('Push image'){
-            steps{
-                script{
-                    withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
-                        def registry_url = "registry.hub.docker.com/"
-                        sh "docker login -u $USER -p $PASSWORD ${registry_url}"
-                        docker.withRegistry("http://${registry_url}", "DockerhubCredentials") {
-                            // Push your image now
-                            ContainerImage.push("${env.BUILD_ID}")
+                stage('Start ARM64 build'){
+                    steps{
+                        build 'yt-archive-aarch64'
+                    }
+                    post{
+                        failure{
+                            echo "ARM64 build failed"
                         }
                     }
                 }
             }
         }
-        stage('Remove unused images'){
+
+        stage('Pull images'){
             steps{
-                sh "docker system prune -fa"
+                script{
+                    withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
+                        def registry_url = "registry.hub.docker.com/"
+                        sh "docker login -u $USER -p $PASSWORD ${registry_url}"
+                        sh "docker pull ${registry_url}tetricz/yt-archive:amd64-build-${env.BUILD_ID}"
+                        sh "docker pull ${registry_url}tetricz/yt-archive:aarch64-build-${env.BUILD_ID}"
+                    }
+                }
+            }
+        }
+        stage('Update Manifest'){
+            steps{
+                echo "Updating manifest...First we test if this works as is"
+                echo "${env.BUILD_ID}"
             }
         }
     }
