@@ -45,17 +45,17 @@ pipeline {
                     echo "ARM64BUILD: ${ARM64BUILD}"
                     withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
-                        sh "docker pull tetricz/technitium-dns:amd64-build-${AMD64BUILD} && docker pull tetricz/technitium-dns:aarch64-build-${ARM64BUILD}"
-                        sh "docker manifest inspect tetricz/technitium-dns:latest"
-                        sh "docker manifest create tetricz/technitium-dns:latest tetricz/technitium-dns:amd64-build-${AMD64BUILD} tetricz/technitium-dns:aarch64-build-${ARM64BUILD}"
-                        sh "docker manifest push tetricz/technitium-dns:latest"
-                        sh "docker manifest inspect tetricz/technitium-dns:latest"
+                        sh "docker pull tetricz/technitium-dns-server:amd64-build-${AMD64BUILD} && docker pull tetricz/technitium-dns-server:aarch64-build-${ARM64BUILD}"
+                        sh "docker manifest inspect tetricz/technitium-dns-server:latest"
+                        sh "docker manifest create tetricz/technitium-dns-server:latest tetricz/technitium-dns-server:amd64-build-${AMD64BUILD} tetricz/technitium-dns-server:aarch64-build-${ARM64BUILD}"
+                        sh "docker manifest push tetricz/technitium-dns-server:latest"
+                        sh "docker manifest inspect tetricz/technitium-dns-server:latest"
                     }
                 }
             }
             post{
                 always{
-                    sh "docker manifest rm tetricz/technitium-dns:latest"
+                    sh "docker manifest rm tetricz/technitium-dns-server:latest"
                     sh "docker logout"
                 }
             }
