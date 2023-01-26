@@ -1,7 +1,6 @@
 pipeline {
     environment{
         AMD64BUILD=''
-        ARM64BUILD=''
     }
     agent any
     stages {
@@ -28,7 +27,6 @@ pipeline {
             steps{
                 script{
                     echo "AMD64BUILD: ${AMD64BUILD}"
-                    echo "ARM64BUILD: ${ARM64BUILD}"
                     withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
                         sh "docker pull tetricz/nextcloud:amd64-build-${AMD64BUILD}"
@@ -43,8 +41,8 @@ pipeline {
             }
             post{
                 always{
-                    sh "docker manifest rm tetricz/nextcloud:25"
                     sh "docker manifest rm tetricz/nextcloud:latest"
+                    sh "docker manifest rm tetricz/nextcloud:25"
                     sh "docker logout"
                 }
             }
