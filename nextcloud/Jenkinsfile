@@ -1,0 +1,59 @@
+pipeline {
+    environment{
+        AMD64BUILD=''
+        ARM64BUILD=''
+    }
+    agent any
+    stages {
+        stage('Parallel builds'){
+            parallel {
+                stage('Start AMD64 build'){
+                    steps{
+                        script{
+                            def res = build 'nextcloud-amd64'
+                            echo "AMD64 build finished"
+                            AMD64BUILD=res.number
+                        }
+                    }
+                    post{
+                        failure{
+                            echo "AMD64 build failed"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Update manifest'){
+            steps{
+                script{
+                    echo "AMD64BUILD: ${AMD64BUILD}"
+                    echo "ARM64BUILD: ${ARM64BUILD}"
+                    withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
+                        sh "echo $PASSWORD | docker login -u $USER --password-stdin"
+                        sh "docker pull tetricz/nextcloud:amd64-build-${AMD64BUILD}"
+                        sh "docker manifest inspect tetricz/nextcloud:latest"
+                        sh "docker manifest create tetricz/nextcloud:latest tetricz/nextcloud:amd64-build-${AMD64BUILD}"
+                        sh "docker manifest create tetricz/nextcloud:25 tetricz/nextcloud:amd64-build-${AMD64BUILD}"
+                        sh "docker manifest push tetricz/nextcloud:latest"
+                        sh "docker manifest push tetricz/nextcloud:25"
+                        sh "docker manifest inspect tetricz/nextcloud:latest"
+                    }
+                }
+            }
+            post{
+                always{
+                    sh "docker manifest rm tetricz/nextcloud:25"
+                    sh "docker manifest rm tetricz/nextcloud:latest"
+                    sh "docker logout"
+                }
+            }
+        }
+    }
+    post {
+		always {
+            sh 'docker system prune -fa'
+			sh 'docker logout'
+		}
+	}
+}
