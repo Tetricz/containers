@@ -30,12 +30,10 @@ pipeline {
                     withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
                         sh "docker pull tetricz/nextcloud:amd64-build-${AMD64BUILD}"
-                        sh "docker manifest inspect tetricz/nextcloud:latest"
                         sh "docker manifest create tetricz/nextcloud:latest tetricz/nextcloud:amd64-build-${AMD64BUILD}"
                         sh "docker manifest create tetricz/nextcloud:25 tetricz/nextcloud:amd64-build-${AMD64BUILD}"
                         sh "docker manifest push tetricz/nextcloud:latest"
                         sh "docker manifest push tetricz/nextcloud:25"
-                        sh "docker manifest inspect tetricz/nextcloud:latest"
                     }
                 }
             }
