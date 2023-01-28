@@ -32,6 +32,7 @@ pipeline {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
                         docker.withRegistry('', "DockerhubCredentials") {
                             ContainerImage.push("aarch64-build-${env.BUILD_ID}")
+                            ContainerImage.push("aarch64-build-latest")
                         }
                     }
                 }
