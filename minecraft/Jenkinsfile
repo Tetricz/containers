@@ -1,0 +1,62 @@
+pipeline {
+    environment{
+        AMD64BUILD=''
+        ARM64BUILD=''
+    }
+    agent any
+    stages {
+        stage('Parallel builds'){
+            parallel {
+                stage('Start AMD64 build'){
+                    steps{
+                        script{
+                            def res = build 'minecraft-amd64'
+                            echo "AMD64 build finished"
+                            AMD64BUILD=res.number
+                        }
+                    }
+                    post{
+                        failure{
+                            echo "AMD64 build failed"
+                        }
+                    }
+                }
+                stage('Start ARM64 build'){
+                    steps{
+                        script{
+                            def res = build 'minecraft-arm64'
+                            echo "ARM64 build finished"
+                            ARM64BUILD=res.number
+                        }
+                    }
+                    post{
+                        failure{
+                            echo "ARM64 build failed"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Update manifest'){
+            steps{
+                script{
+                    echo "AMD64BUILD: ${AMD64BUILD}"
+                    withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
+                        sh "echo $PASSWORD | docker login -u $USER --password-stdin"
+                        sh "docker pull tetricz/minecraft:amd64-build-${env.BUILD_ID} tetricz/ferium:amd64-build-${env.BUILD_ID} tetricz/minecraft:arm64-build-${env.BUILD_ID} tetricz/ferium:arm64-build-${env.BUILD_ID}"
+                        sh "docker manifest create tetricz/minecraft:latest tetricz/minecraft:amd64-build-${AMD64BUILD} tetricz/minecraft:arm64-build-${ARM64BUILD}"
+                        sh "docker manifest create tetricz/ferium:latest tetricz/ferium:amd64-build-${AMD64BUILD} tetricz/ferium:arm64-build-${ARM64BUILD}"
+                        sh "docker manifest push tetricz/minecraft:latest"
+                        sh "docker manifest push tetricz/ferium:latest"
+                    }
+                }
+            }
+            post{
+                always{
+                    sh "docker logout"
+                }
+            }
+        }
+    }
+}

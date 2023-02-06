@@ -1,0 +1,46 @@
+pipeline {
+    agent { label 'ARM64' }
+    environment{
+        ContainerImage=''
+    }
+
+    stages {
+        stage('Startup'){
+            steps {
+                echo "Running ${env.JOB_NAME} on ${env.NODE_NAME}"
+            }
+        }
+        stage('Checkout'){
+            steps {
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Tetricz/containers.git']])
+            }
+        }
+        stage('Build image'){
+            steps{
+                dir("minecraft/main-general"){
+                    script{
+                        sh "docker build -t tetricz/minecraft:arm64-build-${env.BUILD_ID} ."
+                    }
+                }
+                dir("minecraft/ferium"){
+                    script{
+                        sh "docker build -t tetricz/ferium:arm64-build-${env.BUILD_ID} --build-args ARCHITECTURE=-arm64 ."
+                    }
+                }
+            }
+        }
+        stage('Push image'){
+            steps{
+                script{
+                    withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
+                        sh "echo $PASSWORD | docker login -u $USER --password-stdin"
+                        docker.withRegistry('', "DockerhubCredentials") {
+                            sh "docker push tetricz/minecraft:arm64-build-${env.BUILD_ID}"
+                            sh "docker push tetricz/ferium:arm64-build-${env.BUILD_ID}"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
