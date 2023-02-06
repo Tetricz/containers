@@ -1,7 +1,7 @@
 # [Containers-Tetricz](#containers-tetricz)
 
 [![JMusic-Bot](https://jenkins.tetricz.com/buildStatus/icon?job=Container+Builds%2FJMusic-Bot+Container+Build&subject=JMusic-Bot)](https://jenkins.tetricz.com/job/Container%20Builds/job/JMusic-Bot%20Container%20Build/)
-[![Minecraft](https://jenkins.tetricz.com/buildStatus/icon?job=Container+Builds%2FMinecraft+Container+Build&subject=Minecraft)](https://jenkins.tetricz.com/job/Container%20Builds/job/Minecraft%20Container%20Build/)
+[![Minecraft](https://jenkins.tetricz.com/buildStatus/icon?style=flat-square?job=Container+Builds%2FMinecraft-Containers&subject=Minecraft)](https://jenkins.tetricz.com/job/Container%20Builds/job/Minecraft-Containers/)
 [![Nextcloud](https://jenkins.tetricz.com/buildStatus/icon?job=Container+Builds%2FNextcloud+Container+Build&subject=Nextcloud)](https://jenkins.tetricz.com/job/Container%20Builds/job/Nextcloud%20Container%20Build/)
 [![OpenVPN](https://jenkins.tetricz.com/buildStatus/icon?job=Container+Builds%2FOpenVPN+Container+Build&subject=OpenVPN)](https://jenkins.tetricz.com/job/Container%20Builds/job/OpenVPN%20Container%20Build/)
 [![Technitium-DNS-Server](https://jenkins.tetricz.com/buildStatus/icon?job=Container+Builds%2FTechnitium-DNS-Server+Container+Build&subject=Technitium-DNS-Server)](https://jenkins.tetricz.com/job/Container%20Builds/job/Technitium-DNS-Server%20Container%20Build/)
