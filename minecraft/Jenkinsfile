@@ -24,7 +24,7 @@ pipeline {
                 stage('Start ARM64 build'){
                     steps{
                         script{
-                            def res = build 'minecraft-arm64'
+                            def res = build 'minecraft-aarch64'
                             echo "ARM64 build finished"
                             ARM64BUILD=res.number
                         }
