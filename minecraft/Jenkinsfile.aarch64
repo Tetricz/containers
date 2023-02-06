@@ -24,7 +24,7 @@ pipeline {
                 }
                 dir("minecraft/ferium"){
                     script{
-                        sh "docker build -t tetricz/ferium:arm64-build-${env.BUILD_ID} --build-args ARCHITECTURE=-arm64 ."
+                        sh "docker build -t tetricz/ferium:arm64-build-${env.BUILD_ID} --build-arg ARCHITECTURE=-arm64 ."
                     }
                 }
             }
