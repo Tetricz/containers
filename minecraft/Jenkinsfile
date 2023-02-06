@@ -44,7 +44,7 @@ pipeline {
                     echo "AMD64BUILD: ${AMD64BUILD}"
                     withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
-                        sh "docker pull tetricz/minecraft:amd64-build-${env.BUILD_ID} tetricz/ferium:amd64-build-${env.BUILD_ID} tetricz/minecraft:arm64-build-${env.BUILD_ID} tetricz/ferium:arm64-build-${env.BUILD_ID}"
+                        sh "docker pull tetricz/minecraft:amd64-build-${env.BUILD_ID} && docker pull tetricz/ferium:amd64-build-${env.BUILD_ID} && docker pull tetricz/minecraft:arm64-build-${env.BUILD_ID} && docker pull tetricz/ferium:arm64-build-${env.BUILD_ID}"
                         sh "docker manifest create tetricz/minecraft:latest tetricz/minecraft:amd64-build-${AMD64BUILD} tetricz/minecraft:arm64-build-${ARM64BUILD}"
                         sh "docker manifest create tetricz/ferium:latest tetricz/ferium:amd64-build-${AMD64BUILD} tetricz/ferium:arm64-build-${ARM64BUILD}"
                         sh "docker manifest push tetricz/minecraft:latest"
