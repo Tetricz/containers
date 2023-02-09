@@ -54,6 +54,9 @@ pipeline {
             }
             post{
                 always{
+                    sh "docker rmi tetricz/minecraft:amd64-build-${AMD64BUILD} tetricz/ferium:amd64-build-${AMD64BUILD} tetricz/minecraft:arm64-build-${ARM64BUILD} tetricz/ferium:arm64-build-${ARM64BUILD}"
+                    sh "docker manifest rm tetricz/minecraft:latest"
+                    sh "docker manifest rm tetricz/ferium:latest"
                     sh "docker logout"
                 }
             }

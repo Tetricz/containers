@@ -15,13 +15,18 @@ pipeline {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Tetricz/containers.git']])
             }
         }
-        stage('Build image'){
+        stage('Build minecraft'){
             steps{
                 dir("minecraft/main-general"){
                     script{
                         sh "docker build -t tetricz/minecraft:arm64-build-${env.BUILD_ID} ."
                     }
                 }
+
+            }
+        }
+        stage('Build ferium'){
+            steps{
                 dir("minecraft/ferium"){
                     script{
                         sh "docker build -t tetricz/ferium:arm64-build-${env.BUILD_ID} --build-arg ARCHITECTURE=-arm64 ."
@@ -39,6 +44,14 @@ pipeline {
                             sh "docker push tetricz/ferium:arm64-build-${env.BUILD_ID}"
                         }
                     }
+                }
+            }
+        }
+        post {
+            always {
+                script{
+                    sh "docker rmi tetricz/minecraft:arm64-build-${env.BUILD_ID}"
+                    sh "docker rmi tetricz/ferium:arm64-build-${env.BUILD_ID}"
                 }
             }
         }
