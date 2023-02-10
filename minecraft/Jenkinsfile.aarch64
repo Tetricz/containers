@@ -47,12 +47,12 @@ pipeline {
                 }
             }
         }
-        post {
-            always {
-                script{
-                    sh "docker rmi tetricz/minecraft:arm64-build-${env.BUILD_ID}"
-                    sh "docker rmi tetricz/ferium:arm64-build-${env.BUILD_ID}"
-                }
+    }
+    post {
+        always {
+            script{
+                sh "docker rmi tetricz/minecraft:arm64-build-${env.BUILD_ID}"
+                sh "docker rmi tetricz/ferium:arm64-build-${env.BUILD_ID}"
             }
         }
     }
