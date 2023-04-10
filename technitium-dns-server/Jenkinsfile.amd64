@@ -18,16 +18,16 @@ pipeline {
         stage('Buildx setup'){
             steps{
                 script{
-                    sh "docker buildx create --name techdnstAMD --use"
+                    sh "docker buildx create --name techdnsAMD --use"
                     sh "docker buildx inspect --bootstrap"
                 }
             }
         }
-        stage('Build DNS server'){
+        stage('Build Image'){
             steps{
                 dir("minecraft/main-general"){
                     script{
-                        sh "docker buildx build --platform=linux/amd64 -t tetricz/technitium-dns-server:amd64-build-${env.BUILD_ID} ."
+                        sh "docker buildx build --platform=linux/amd64 -t tetricz/technitium-dns-server:amd64-build-${env.BUILD_ID} . --load"
                     }
                 }
             }
@@ -48,6 +48,7 @@ pipeline {
     post {
         always {
             script{
+                sh 'docker buildx prune -fa'
                 sh "docker rmi tetricz/technitium-dns-server:amd64-build-${env.BUILD_ID}"
             }
         }

@@ -27,7 +27,7 @@ pipeline {
             steps{
                 dir("minecraft/main-general"){
                     script{
-                        sh "docker buildx build --platform=linux/arm64 -t tetricz/minecraft:arm64-build-${env.BUILD_ID} ."
+                        sh "docker buildx build --platform=linux/arm64 -t tetricz/minecraft:arm64-build-${env.BUILD_ID} . --load"
                     }
                 }
 
@@ -37,7 +37,7 @@ pipeline {
             steps{
                 dir("minecraft/ferium"){
                     script{
-                        sh "docker buildx build --platform=linux/arm64 -t tetricz/ferium:arm64-build-${env.BUILD_ID} --build-arg ARCHITECTURE=-arm64 ."
+                        sh "docker buildx build --platform=linux/arm64 -t tetricz/ferium:arm64-build-${env.BUILD_ID} --build-arg ARCHITECTURE=-arm64 . --load"
                     }
                 }
             }
@@ -59,6 +59,7 @@ pipeline {
     post {
         always {
             script{
+                sh 'docker buildx prune -fa'
                 sh "docker rmi tetricz/minecraft:arm64-build-${env.BUILD_ID}"
                 sh "docker rmi tetricz/ferium:arm64-build-${env.BUILD_ID}"
             }
