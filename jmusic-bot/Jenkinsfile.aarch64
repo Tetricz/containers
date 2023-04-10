@@ -15,19 +15,11 @@ pipeline {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Tetricz/containers.git']])
             }
         }
-        stage('Buildx setup'){
-            steps{
-                script{
-                    sh "docker buildx create --name jmusicARM --use"
-                    sh "docker buildx inspect --bootstrap"
-                }
-            }
-        }
         stage('Build Image'){
             steps{
                 dir("jmusic-bot"){
                     script{
-                        sh "docker buildx build --platform=linux/arm64 -t tetricz/jmusic-bot:arm64-build-${env.BUILD_ID} . --load"
+                        sh "docker buildx build --builder=jmusic-builder --platform=linux/arm64 -t tetricz/jmusic-bot:arm64-build-${env.BUILD_ID} . --load"
                     }
                 }
             }
@@ -47,7 +39,6 @@ pipeline {
     }
     post {
 		always {
-            sh "docker buildx prune -fa"
 			sh 'docker logout'
 		}
 	}
