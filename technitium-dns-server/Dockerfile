@@ -1,8 +1,8 @@
 # Maintainer https://github.com/Tetricz
 # https://hub.docker.com/_/microsoft-dotnet-sdk
 # https://hub.docker.com/_/microsoft-dotnet-runtime/
-ARG SDK_VERSION=7.0
-ARG RUNTIME_VERSION=7.0
+ARG SDK_VERSION=7.0-alpine
+ARG RUNTIME_VERSION=7.0-alpine
 
 FROM alpine:latest as downloader
 # https://github.com/TechnitiumSoftware/DnsServer
@@ -18,13 +18,11 @@ FROM mcr.microsoft.com/dotnet/sdk:${SDK_VERSION} as builder
 COPY --from=downloader /TechnitiumLibrary-master /TechnitiumLibrary-master
 COPY --from=downloader DnsServer-* DnsServer-build
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
-RUN dotnet publish TechnitiumLibrary-master/TechnitiumLibrary.ByteTree --disable-parallel --configuration Release --output="/TechnitiumLibrary/bin" --use-current-runtime "-p:DebugSymbols=false;DebugType=none"
-RUN dotnet publish TechnitiumLibrary-master/TechnitiumLibrary.IO --disable-parallel --configuration Release --output="/TechnitiumLibrary/bin" --use-current-runtime "-p:DebugSymbols=false;DebugType=none"
-RUN dotnet publish TechnitiumLibrary-master/TechnitiumLibrary.Net --disable-parallel --configuration Release --output="/TechnitiumLibrary/bin" --use-current-runtime "-p:DebugSymbols=false;DebugType=none"
-RUN dotnet publish TechnitiumLibrary-master/TechnitiumLibrary.Net.UPnP --disable-parallel --configuration Release --output="/TechnitiumLibrary/bin" --use-current-runtime "-p:DebugSymbols=false;DebugType=none"
-RUN dotnet publish DnsServer-build/DnsServerApp --disable-parallel --configuration Release --output="/dns" --use-current-runtime "-p:DebugSymbols=false;DebugType=none"
+RUN dotnet build /TechnitiumLibrary/TechnitiumLibrary.ByteTree/TechnitiumLibrary.ByteTree.csproj -c Release --output="/TechnitiumLibrary/bin" --use-current-runtime
+RUN dotnet build /TechnitiumLibrary/TechnitiumLibrary.Net/TechnitiumLibrary.Net.csproj -c Release --output="/TechnitiumLibrary/bin" --use-current-runtime
+RUN dotnet publish /DnsServer/DnsServerApp/DnsServerApp.csproj -c Release --output="/dns" --use-current-runtime
 
-FROM mcr.microsoft.com/dotnet/runtime:${RUNTIME_VERSION}
+FROM mcr.microsoft.com/dotnet/aspnet:${RUNTIME_VERSION}
 
 COPY --from=builder /dns /dns
 WORKDIR /dns

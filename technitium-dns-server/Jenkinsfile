@@ -1,7 +1,6 @@
 pipeline {
     environment{
         AMD64BUILD=''
-        ARM64BUILD=''
     }
     agent any
     stages {
@@ -21,20 +20,6 @@ pipeline {
                         }
                     }
                 }
-                stage('Start ARM64 build'){
-                    steps{
-                        script {
-                            def res = build 'technitium-dns-aarch64'
-                            echo "ARM64 build finished"
-                            ARM64BUILD=res.number
-                        }
-                    }
-                    post{
-                        failure{
-                            echo "ARM64 build failed"
-                        }
-                    }
-                }
             }
         }
 
@@ -42,11 +27,10 @@ pipeline {
             steps{
                 script{
                     echo "AMD64BUILD: ${AMD64BUILD}"
-                    echo "ARM64BUILD: ${ARM64BUILD}"
                     withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
-                        sh "docker pull tetricz/technitium-dns-server:amd64-build-${AMD64BUILD} && docker pull tetricz/technitium-dns-server:aarch64-build-latest"
-                        sh "docker manifest create tetricz/technitium-dns-server:latest tetricz/technitium-dns-server:amd64-build-${AMD64BUILD} tetricz/technitium-dns-server:aarch64-build-${ARM64BUILD}"
+                        sh "docker pull tetricz/technitium-dns-server:amd64-build-${AMD64BUILD}"
+                        sh "docker manifest create tetricz/technitium-dns-server:latest tetricz/technitium-dns-server:amd64-build-${AMD64BUILD}"
                         sh "docker manifest push tetricz/technitium-dns-server:latest"
                     }
                 }
