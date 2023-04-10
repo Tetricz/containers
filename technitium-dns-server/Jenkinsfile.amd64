@@ -1,5 +1,4 @@
 pipeline {
-    agent { label 'AMD64' }
     environment{
         ContainerImage=''
     }
@@ -15,12 +14,19 @@ pipeline {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Tetricz/containers.git']])
             }
         }
-        stage('Build image'){
-            steps {
-                dir("technitium-dns-server"){
-                    echo "Inside container directory, starting build..."
+        stage('Buildx setup'){
+            steps{
+                script{
+                    sh "docker buildx create --name techdnstAMD --use"
+                    sh "docker buildx inspect --bootstrap"
+                }
+            }
+        }
+        stage('Build DNS server'){
+            steps{
+                dir("minecraft/main-general"){
                     script{
-                        ContainerImage = docker.build("tetricz/technitium-dns-server")
+                        sh "docker buildx build --platform=linux/amd64 -t tetricz/technitium-dns-server:amd64-build-${env.BUILD_ID} ."
                     }
                 }
             }
@@ -31,7 +37,7 @@ pipeline {
                     withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
                         docker.withRegistry('', "DockerhubCredentials") {
-                            ContainerImage.push("amd64-build-${env.BUILD_ID}")
+                            sh "docker push tetricz/technitium-dns-server:amd64-build-${env.BUILD_ID}"
                         }
                     }
                 }
@@ -39,9 +45,10 @@ pipeline {
         }
     }
     post {
-		always {
-            sh "docker system prune -fa"
-			sh 'docker logout'
-		}
-	}
+        always {
+            script{
+                sh "docker rmi tetricz/technitium-dns-server:amd64-build-${env.BUILD_ID}"
+            }
+        }
+    }
 }
