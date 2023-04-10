@@ -46,7 +46,7 @@ pipeline {
                     withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
                         sh "docker pull tetricz/yt-archive:amd64-build-${AMD64BUILD} && docker pull tetricz/yt-archive:arm64-build-${ARM64BUILD}"
-                        sh "docker manifest create tetricz/yt-archive:latest tetricz/yt-archive:amd64-build-${AMD64BUILD} tetricz/yt-archive:aarch64-build-${ARM64BUILD}"
+                        sh "docker manifest create tetricz/yt-archive:latest tetricz/yt-archive:amd64-build-${AMD64BUILD} tetricz/yt-archive:arm64-build-${ARM64BUILD}"
                         sh "docker manifest push tetricz/yt-archive:latest"
                     }
                 }
