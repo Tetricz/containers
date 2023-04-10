@@ -4,6 +4,14 @@ pipeline {
     }
     agent any
     stages {
+        stage('Buildx setup'){
+            steps{
+                script{
+                    sh "docker buildx create --name techdns-builder --use"
+                    sh "docker buildx inspect --bootstrap"
+                }
+            }
+        }
         stage('Parallel builds'){
             parallel {
                 stage('Start AMD64 build'){
@@ -35,17 +43,13 @@ pipeline {
                     }
                 }
             }
-            post{
-                always{
-                    sh "docker manifest rm tetricz/technitium-dns-server:latest"
-                    sh 'docker rmi tetricz/technitium-dns-server:amd64-build-${AMD64BUILD}'
-                    sh "docker logout"
-                }
-            }
         }
     }
     post {
 		always {
+            sh 'docker buildx prune --builder=techdns-builder -fa'
+            sh 'docker buildx rm techdns-builder'
+            sh "docker manifest rm tetricz/technitium-dns-server:latest"
 			sh 'docker logout'
 		}
 	}
