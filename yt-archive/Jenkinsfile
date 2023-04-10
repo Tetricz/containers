@@ -62,7 +62,7 @@ pipeline {
     }
     post {
 		always {
-            sh 'docker buildx prune --builder= yt-archive-builder -fa'
+            sh 'docker buildx prune --builder=yt-archive-builder -fa'
             sh 'docker buildx rm yt-archive-builder'
             sh "docker manifest rm tetricz/yt-archive:latest"
 			sh 'docker logout'
