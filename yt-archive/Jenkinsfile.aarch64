@@ -48,6 +48,7 @@ pipeline {
     post {
 		always {
             sh "docker buildx prune -fa"
+            sh "docker buildx rm ytARM"
 			sh 'docker logout'
 		}
 	}
