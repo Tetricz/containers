@@ -53,6 +53,7 @@ pipeline {
             }
             post{
                 always{
+                    sh 'docker rmi tetricz/yt-archive:amd64-build-${AMD64BUILD} tetricz/yt-archive:aarch64-build-${ARM64BUILD}'
                     sh "docker manifest rm tetricz/yt-archive:latest"
                     sh "docker logout"
                 }
@@ -61,7 +62,6 @@ pipeline {
     }
     post {
 		always {
-            sh 'docker system prune -fa'
 			sh 'docker logout'
 		}
 	}
