@@ -1,5 +1,4 @@
 pipeline {
-    agent { label 'AMD64' }
     environment{
         ContainerImage=''
     }
@@ -15,11 +14,19 @@ pipeline {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Tetricz/containers.git']])
             }
         }
+        stage('Buildx setup'){
+            steps{
+                script{
+                    sh "docker buildx create --name minecraftAMD --use"
+                    sh "docker buildx inspect --bootstrap"
+                }
+            }
+        }
         stage('Build minecraft'){
             steps{
                 dir("minecraft/main-general"){
                     script{
-                        sh "docker build -t tetricz/minecraft:amd64-build-${env.BUILD_ID} ."
+                        sh "docker buildx build --platform=linux/amd64 -t tetricz/minecraft:amd64-build-${env.BUILD_ID} ."
                     }
                 }
             }
@@ -28,7 +35,7 @@ pipeline {
             steps{
                 dir("minecraft/ferium"){
                     script{
-                        sh "docker build -t tetricz/ferium:amd64-build-${env.BUILD_ID} ."
+                        sh "docker buildx build --platform=linux/amd64 -t tetricz/ferium:amd64-build-${env.BUILD_ID} ."
                     }
                 }
             }
