@@ -53,8 +53,8 @@ pipeline {
                     echo "ARM64BUILD: ${ARM64BUILD}"
                     withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
-                        sh "docker pull tetricz/jmusic-bot:amd64-build-${AMD64BUILD} && docker pull tetricz/jmusic-bot:aarch64-build-${ARM64BUILD}"
-                        sh "docker manifest create tetricz/jmusic-bot:latest tetricz/jmusic-bot:amd64-build-${AMD64BUILD} tetricz/jmusic-bot:aarch64-build-${ARM64BUILD}"
+                        sh "docker pull tetricz/jmusic-bot:amd64-build-${AMD64BUILD} && docker pull tetricz/jmusic-bot:arm64-build-${ARM64BUILD}"
+                        sh "docker manifest create tetricz/jmusic-bot:latest tetricz/jmusic-bot:amd64-build-${AMD64BUILD} tetricz/jmusic-bot:arm64-build-${ARM64BUILD}"
                         sh "docker manifest push tetricz/jmusic-bot:latest"
                     }
                 }
