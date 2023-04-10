@@ -5,7 +5,7 @@ FROM alpine:latest as downloader
 # https://github.com/yt-dlp/yt-dlp
 ARG GIT_BRANCH=master
 RUN apk add --no-cache curl git \
- && cd / && git clone --connect-timeout 5 --retry 5 --retry-delay 0 --branch ${GIT_BRANCH} https://github.com/yt-dlp/yt-dlp.git
+ && cd / && git clone --branch ${GIT_BRANCH} https://github.com/yt-dlp/yt-dlp.git
 
 FROM python:3-alpine
 
