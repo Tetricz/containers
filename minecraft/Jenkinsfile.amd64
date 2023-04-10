@@ -1,4 +1,5 @@
 pipeline {
+    agent { label 'AMD64' }
     environment{
         ContainerImage=''
     }
