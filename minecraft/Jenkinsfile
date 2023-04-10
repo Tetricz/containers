@@ -5,6 +5,14 @@ pipeline {
     }
     agent any
     stages {
+        stage('Buildx setup'){
+            steps{
+                script{
+                    sh "docker buildx create --name minecraft-builder --use"
+                    sh "docker buildx inspect --bootstrap"
+                }
+            }
+        }
         stage('Parallel builds'){
             parallel {
                 stage('Start AMD64 build'){
@@ -56,10 +64,11 @@ pipeline {
     }
     post {
        always{
-           sh "docker rmi tetricz/minecraft:amd64-build-${AMD64BUILD} tetricz/ferium:amd64-build-${AMD64BUILD} tetricz/minecraft:arm64-build-${ARM64BUILD} tetricz/ferium:arm64-build-${ARM64BUILD}"
-           sh "docker manifest rm tetricz/minecraft:latest"
-           sh "docker manifest rm tetricz/ferium:latest"
-           sh "docker logout"
+            sh 'docker buildx prune --builder=minecraft-builder -fa'
+            sh 'docker buildx rm minecraft-builder'
+            sh "docker manifest rm tetricz/minecraft:latest"
+            sh "docker manifest rm tetricz/ferium:latest"
+            sh "docker logout"
        }
     }
 }
