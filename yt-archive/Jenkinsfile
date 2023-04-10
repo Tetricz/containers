@@ -5,6 +5,14 @@ pipeline {
     }
     agent any
     stages {
+        stage('Buildx setup'){
+            steps{
+                script{
+                    sh "docker buildx create --name yt-archive-builder --use"
+                    sh "docker buildx inspect --bootstrap"
+                }
+            }
+        }
         stage('Parallel builds'){
             parallel {
                 stage('Start AMD64 build'){
@@ -60,6 +68,8 @@ pipeline {
     }
     post {
 		always {
+            sh 'docker buildx prune -fa'
+            sh 'docker buildx rm yt-archive-builder'
             sh "docker manifest rm tetricz/yt-archive:latest"
 			sh 'docker logout'
 		}

@@ -15,14 +15,6 @@ pipeline {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Tetricz/containers.git']])
             }
         }
-        stage('Buildx setup'){
-            steps{
-                script{
-                    sh "docker buildx create --name ytAMD --use"
-                    sh "docker buildx inspect --bootstrap"
-                }
-            }
-        }
         stage('Build Image'){
             steps{
                 dir("yt-archive"){
@@ -47,8 +39,6 @@ pipeline {
     }
     post {
 		always {
-            sh "docker buildx prune -fa"
-            sh 'docker buildx rm ytAMD'
 			sh 'docker logout'
 		}
 	}
