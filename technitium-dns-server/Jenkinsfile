@@ -38,6 +38,7 @@ pipeline {
             post{
                 always{
                     sh "docker manifest rm tetricz/technitium-dns-server:latest"
+                    sh 'docker rmi tetricz/technitium-dns-server:amd64-build-${AMD64BUILD}'
                     sh "docker logout"
                 }
             }
@@ -45,7 +46,6 @@ pipeline {
     }
     post {
 		always {
-            sh 'docker system prune -fa'
 			sh 'docker logout'
 		}
 	}
