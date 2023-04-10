@@ -45,7 +45,6 @@ pipeline {
                 }
             }
         }
-
         stage('Update manifest'){
             steps{
                 script{
@@ -57,11 +56,6 @@ pipeline {
                         sh "docker manifest create tetricz/yt-archive:latest tetricz/yt-archive:amd64-build-${AMD64BUILD} tetricz/yt-archive:arm64-build-${ARM64BUILD}"
                         sh "docker manifest push tetricz/yt-archive:latest"
                     }
-                }
-            }
-            post{
-                always{
-                    sh 'docker rmi tetricz/yt-archive:amd64-build-${AMD64BUILD} tetricz/yt-archive:arm64-build-${ARM64BUILD}'
                 }
             }
         }
