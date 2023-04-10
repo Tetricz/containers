@@ -19,7 +19,7 @@ pipeline {
             steps{
                 dir("yt-archive"){
                     script{
-                        sh "docker buildx build --platform=linux/arm64 -t tetricz/yt-archive:arm64-build-${env.BUILD_ID} . --load"
+                        sh "docker buildx build --builder=yt-archive-builder --platform=linux/arm64 -t tetricz/yt-archive:arm64-build-${env.BUILD_ID} . --load"
                     }
                 }
             }
