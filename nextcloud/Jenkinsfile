@@ -4,6 +4,14 @@ pipeline {
     }
     agent any
     stages {
+        stage('Buildx setup'){
+            steps{
+                script{
+                    sh "docker buildx create --name nextcloud-builder --use"
+                    sh "docker buildx inspect --bootstrap"
+                }
+            }
+        }
         stage('Parallel builds'){
             parallel {
                 stage('Start AMD64 build'){
@@ -37,18 +45,14 @@ pipeline {
                     }
                 }
             }
-            post{
-                always{
-                    sh 'docker rmi tetricz/nextcloud:amd64-build-${AMD64BUILD}'
-                    sh "docker manifest rm tetricz/nextcloud:latest"
-                    sh "docker manifest rm tetricz/nextcloud:25"
-                    sh "docker logout"
-                }
-            }
         }
     }
     post {
 		always {
+            sh 'docker buildx prune --builder=nextcloud-builder -fa'
+            sh 'docker buildx rm nextcloud-builder'
+            sh "docker manifest rm tetricz/nextcloud:latest"
+            sh "docker manifest rm tetricz/nextcloud:25"
 			sh 'docker logout'
 		}
 	}
