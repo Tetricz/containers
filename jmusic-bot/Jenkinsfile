@@ -8,7 +8,7 @@ pipeline {
         stage('Buildx setup'){
             steps{
                 script{
-                    sh "docker buildx create --name jmusicAMD --use"
+                    sh "docker buildx create --name jmusic-builder --use"
                     sh "docker buildx inspect --bootstrap"
                 }
             }
@@ -18,7 +18,7 @@ pipeline {
                 stage('Start AMD64 build'){
                     steps{
                         script{
-                            def res = build 'jmusic-builder'
+                            def res = build 'jmusic-bot-amd64'
                             echo "AMD64 build finished"
                             AMD64BUILD=res.number
                         }
