@@ -1,0 +1,63 @@
+pipeline {
+    environment{
+        AMD64BUILD=''
+        ARM64BUILD=''
+    }
+    agent any
+    stages {
+        stage('Parallel builds'){
+            parallel {
+                stage('Start AMD64 build'){
+                    steps{
+                        script{
+                            def res = build 'jmusic-bot-amd64'
+                            echo "AMD64 build finished"
+                            AMD64BUILD=res.number
+                        }
+                    }
+                    post{
+                        failure{
+                            echo "AMD64 build failed"
+                        }
+                    }
+                }
+                stage('Start ARM64 build'){
+                    steps{
+                        script {
+                            def res = build 'jmusic-bot-aarch64'
+                            echo "ARM64 build finished"
+                            ARM64BUILD=res.number
+                        }
+                    }
+                    post{
+                        failure{
+                            echo "ARM64 build failed"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Update manifest'){
+            steps{
+                script{
+                    echo "AMD64BUILD: ${AMD64BUILD}"
+                    echo "ARM64BUILD: ${ARM64BUILD}"
+                    withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
+                        sh "echo $PASSWORD | docker login -u $USER --password-stdin"
+                        sh "docker pull tetricz/jmusic-bot:amd64-build-${AMD64BUILD} && docker pull tetricz/jmusic-bot:aarch64-build-${ARM64BUILD}"
+                        sh "docker manifest create tetricz/jmusic-bot:latest tetricz/jmusic-bot:amd64-build-${AMD64BUILD} tetricz/jmusic-bot:aarch64-build-${ARM64BUILD}"
+                        sh "docker manifest push tetricz/jmusic-bot:latest"
+                    }
+                }
+            }
+        }
+    }
+    post {
+		always {
+            sh 'docker rmi tetricz/jmusic-bot:amd64-build-${AMD64BUILD} tetricz/jmusic-bot:aarch64-build-${ARM64BUILD}'
+            sh "docker manifest rm tetricz/jmusic-bot:latest"
+			sh 'docker logout'
+		}
+	}
+}
