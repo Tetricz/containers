@@ -29,9 +29,7 @@ pipeline {
                 script{
                     withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
-                        docker.withRegistry('', "DockerhubCredentials") {
-                            sh "docker push tetricz/jmusic-bot:arm64-build-${env.BUILD_ID}"
-                        }
+                        sh "docker push tetricz/jmusic-bot:arm64-build-${env.BUILD_ID}"
                     }
                 }
             }
