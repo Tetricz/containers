@@ -17,7 +17,7 @@ pipeline {
         }
         stage('Build Image'){
             steps{
-                dir("minecraft/main-general"){
+                dir("technitium-dns-server"){
                     script{
                         sh "docker buildx build --builder=techdns-builder --platform=linux/amd64 -t tetricz/technitium-dns-server:amd64-build-${env.BUILD_ID} . --load"
                     }
