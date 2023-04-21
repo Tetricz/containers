@@ -19,7 +19,9 @@ pipeline {
             steps{
                 dir("nextcloud"){
                     script{
-                        sh "docker buildx build --builder=nextcloud-builder --build-arg NC_VERSION=25 --platform=linux/amd64 -t tetricz/nextcloud:amd64-build-${env.BUILD_ID} . --load"
+                        sh "docker buildx build --builder=nextcloud-builder --platform=linux/amd64 -t tetricz/nextcloud:amd64-build-${env.BUILD_ID} . --load"
+                        sh "docker buildx build --builder=nextcloud-builder --build-arg NC_VERSION=26 --platform=linux/amd64 -t tetricz/nextcloud:amd64-build-${env.BUILD_ID}-26 . --load"
+                        sh "docker buildx build --builder=nextcloud-builder --build-arg NC_VERSION=25 --platform=linux/amd64 -t tetricz/nextcloud:amd64-build-${env.BUILD_ID}-25 . --load"
                     }
                 }
             }
@@ -30,6 +32,8 @@ pipeline {
                     withCredentials([usernamePassword( credentialsId: 'DockerhubCredentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
                         sh "docker push tetricz/nextcloud:amd64-build-${env.BUILD_ID}"
+                        sh "docker push tetricz/nextcloud:amd64-build-${env.BUILD_ID}-26"
+                        sh "docker push tetricz/nextcloud:amd64-build-${env.BUILD_ID}-25"
                     }
                 }
             }
