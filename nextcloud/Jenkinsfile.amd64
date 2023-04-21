@@ -19,7 +19,7 @@ pipeline {
             steps{
                 dir("nextcloud"){
                     script{
-                        sh "docker buildx build --builder=nextcloud-builder --platform=linux/amd64 -t tetricz/nextcloud:amd64-build-${env.BUILD_ID} . --load"
+                        sh "docker buildx build --builder=nextcloud-builder --build-arg NC_VERSION=25 --platform=linux/amd64 -t tetricz/nextcloud:amd64-build-${env.BUILD_ID} . --load"
                     }
                 }
             }
