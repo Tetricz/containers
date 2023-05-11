@@ -7,16 +7,14 @@ ARG RUNTIME_VERSION=7.0-alpine
 FROM alpine:latest as downloader
 # https://github.com/TechnitiumSoftware/DnsServer
 ARG TECHDNS_VERSION=master
-RUN apk add --no-cache curl unzip \
- && curl -L --connect-timeout 5 --retry 5 --retry-delay 0 https://github.com/TechnitiumSoftware/TechnitiumLibrary/archive/refs/heads/master.zip -o techlibrary.zip \
- && unzip *library.zip \
- && curl -L --connect-timeout 5 --retry 5 --retry-delay 0 https://github.com/TechnitiumSoftware/DnsServer/archive/refs/heads/${TECHDNS_VERSION}.zip -o techdns.zip \
- && unzip *dns.zip
+RUN apk add --no-cache git \
+  && git clone --depth 1 https://github.com/TechnitiumSoftware/TechnitiumLibrary.git TechnitiumLibrary \
+  && git clone --depth 1 https://github.com/TechnitiumSoftware/DnsServer.git DnsServer
 
 FROM mcr.microsoft.com/dotnet/sdk:${SDK_VERSION} as builder
 # https://docs.microsoft.com/en-us/dotnet/core/rid-catalog#linux-rids
-COPY --from=downloader /TechnitiumLibrary-master /TechnitiumLibrary-master
-COPY --from=downloader DnsServer-* DnsServer-build
+COPY --from=downloader /TechnitiumLibrary /TechnitiumLibrary
+COPY --from=downloader DnsServer DnsServer
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 RUN dotnet build /TechnitiumLibrary/TechnitiumLibrary.ByteTree/TechnitiumLibrary.ByteTree.csproj -c Release --output="/TechnitiumLibrary/bin" --use-current-runtime
 RUN dotnet build /TechnitiumLibrary/TechnitiumLibrary.Net/TechnitiumLibrary.Net.csproj -c Release --output="/TechnitiumLibrary/bin" --use-current-runtime
