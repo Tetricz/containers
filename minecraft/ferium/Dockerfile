@@ -32,6 +32,7 @@ RUN unzip "ferium-linux*.zip" -d /usr/bin/
 COPY --chmod=777 ./entrypoint.sh /entrypoint.sh
 COPY --chmod=777 ./start.sh /start.sh
 COPY --chmod=777 ./update.sh /update.sh
+COPY --chmod=777 ./auto-script.sh /auto-script.sh
 
 # Change permissions of executables
 RUN chmod +x /usr/bin/ferium
