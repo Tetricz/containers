@@ -1,6 +1,6 @@
 #!/bin/bash
 addgroup -g ${GID} minecraft
-adduser -g "Minecraft server user" -h "/minecraft" -s "/bin/bash" -D -u ${UID} --ingroup minecraft minecraft
+adduser -g "Minecraft server user" -h "/minecraft" -s "/bin/bash" -D -u ${UID} --ingroup users minecraft
 
 id -u "minecraft"
 id -g "minecraft"
@@ -42,4 +42,4 @@ chown -R minecraft:minecraft /minecraft
 
 su "minecraft" -c "exec /auto-script.sh"
 su "minecraft" -c "exec /update.sh"
-su "minecraft" -c "exec \"$@\""
+#su "minecraft" -c "exec \"$@\""
