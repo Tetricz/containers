@@ -15,7 +15,7 @@ fi
 # On the first run, copy the jar to the persistent volume
 if [ ! -e /jars/copied ]; then
     cp /jars/*.jar /minecraft/
-    cp /minecraft/ferium.log /minecraft/ferium.log.$(date +%s)
+    cp /minecraft/ferium.log /minecraft/logs/ferium.log.$(date +%s)
     rm -f /minecraft/ferium.log
     touch /jars/copied
 fi
