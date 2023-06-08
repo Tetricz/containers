@@ -1,4 +1,5 @@
 #!/bin/bash
+getent group ${GID}
 exit_result=$(echo $?)
 if [ ${exit_result} == 0 ]; then
     echo "GID exists, adding existing group..."
@@ -52,3 +53,5 @@ chown -R minecraft:minecraft /minecraft
 su "minecraft" -c "exec /auto-script.sh"
 su "minecraft" -c "exec /update.sh"
 su "minecraft" -c "exec \"$@\""
+
+echo -e "Server stopped."
