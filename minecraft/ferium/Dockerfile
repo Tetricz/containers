@@ -9,10 +9,10 @@ ARG ARCHITECTURE=
 # For x86, leave blank, for arm64, use -arm64
 
 ARG UID=1000
-ARG GID=1001
+ARG GID=1000
 
-RUN apk add --no-cache jq curl bash openjdk17 gcc unzip
-RUN curl --connect-timeout 5 --retry 5 -proto '=https' -tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN apk add --no-cache curl bash openjdk17-jre-headless unzip
+RUN curl --connect-timeout 5 --retry 5 -proto '=https' -tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile=minimal
 
 ENV MEMORY=2G \
     ENV_MC_VERSION=$MC_VERSION \
@@ -28,6 +28,7 @@ RUN curl -L --connect-timeout 5 --retry 5 --retry-delay 0 https://meta.fabricmc.
 RUN curl -L --connect-timeout 5 --retry 5 --retry-delay 0 https://piston-data.mojang.com/v1/objects/${VANILLA_OBJ_ID}/server.jar --output /jars/server.jar
 RUN curl -LO --connect-timeout 5 --retry 5 --retry-delay 0 $(curl -s https://api.github.com/repos/gorilla-devs/ferium/releases/latest | grep -i "browser_download_url.*\linux${ARCHITECTURE}-nogui" | sed 's/.*\(http.*\)"/\1/')
 RUN unzip "ferium-linux*.zip" -d /usr/bin/
+RUN rm ferium*.zip
 
 COPY --chmod=777 ./entrypoint.sh /entrypoint.sh
 COPY --chmod=777 ./start.sh /start.sh
