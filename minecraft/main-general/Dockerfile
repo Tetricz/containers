@@ -6,8 +6,9 @@ RUN apk add --no-cache openjdk17-jre-headless
 ENV MEMORY=2G \
     JARFILE=server.jar
 
+COPY --chmod=755 entrypoint.sh /entrypoint.sh
+
 WORKDIR /minecraft
 
-EXPOSE 25565/tcp 25575/tcp
-
+ENTRYPOINT [ "/entrypoint.sh" ]
 CMD java -Xmx${MEMORY} -Xms${MEMORY} -jar ${JARFILE}
