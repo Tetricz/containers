@@ -22,7 +22,7 @@ ENV MEMORY=1G \
     UID=${UID} \
     GID=${GID}
 
-WORKDIR /app/
+WORKDIR /config/
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "/start.sh" ]
