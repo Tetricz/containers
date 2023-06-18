@@ -33,6 +33,15 @@ pipeline {
                 }
             }
         }
+        stage('Build Velocity'){
+            steps{
+                dir("minecraft/velocity"){
+                    script{
+                        sh "docker buildx build --builder=minecraft-builder --platform=linux/amd64 -t tetricz/velocity:amd64-build-${env.BUILD_ID} . --load"
+                    }
+                }
+            }
+        }
         stage('Push image'){
             steps{
                 script{
@@ -40,6 +49,7 @@ pipeline {
                         sh "echo $PASSWORD | docker login -u $USER --password-stdin"
                         sh "docker push tetricz/minecraft:amd64-build-${env.BUILD_ID}"
                         sh "docker push tetricz/ferium:amd64-build-${env.BUILD_ID}"
+                        sh "docker push tetricz/velocity:amd64-build-${env.BUILD_ID}"
                     }
                 }
             }
