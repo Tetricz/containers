@@ -46,7 +46,7 @@ if [ ! -e /jars/copied ]; then
     touch /jars/copied
 fi
 
-chown -R minecraft:minecraft /minecraft
+chown -R ${UID}:${GID} /minecraft
 
 su "minecraft" -c "exec /auto-script.sh"
 su "minecraft" -c "exec /update.sh"
