@@ -4,6 +4,7 @@ exit_result=$(echo $?)
 if [ ${exit_result} == 0 ]; then
     echo "GID exists, adding existing group..."
     GROUP=$(getent group ${GID} | cut -d: -f1)
+    echo "GROUP: ${GROUP}"
     adduser -g "Minecraft server user" -h "/minecraft" -s "/bin/bash" -D -u ${UID} --ingroup ${GROUP} minecraft
 else
     echo "GID does not exist, creating group..."
