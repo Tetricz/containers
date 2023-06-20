@@ -1,7 +1,7 @@
 # Maintainer https://github.com/Tetricz
 FROM alpine:latest
 
-RUN apk add --no-cache openjdk17-jre-headless bash
+RUN apk add --no-cache openjdk17-jre-headless bash libstdc++
 
 ENV MEMORY=2G \
     JARFILE=server.jar \

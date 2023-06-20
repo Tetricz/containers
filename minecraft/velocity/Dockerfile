@@ -12,7 +12,7 @@ FROM alpine:latest
 ARG UID=1000
 ARG GID=1000
 
-RUN apk add --no-cache openjdk17-jre-headless bash curl
+RUN apk add --no-cache openjdk17-jre-headless bash curl libstdc++
 
 COPY --from=builder /velocity/proxy/build/libs/velocity*all.jar /velocity.jar
 COPY --chmod=755 entrypoint.sh /entrypoint.sh

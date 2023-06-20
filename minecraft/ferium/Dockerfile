@@ -11,7 +11,7 @@ ARG ARCHITECTURE=
 ARG UID=1000
 ARG GID=1000
 
-RUN apk add --no-cache curl bash openjdk17-jre-headless unzip
+RUN apk add --no-cache curl bash openjdk17-jre-headless unzip libstdc++
 RUN curl --connect-timeout 5 --retry 5 -proto '=https' -tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile=minimal
 
 ENV MEMORY=2G \
