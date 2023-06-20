@@ -20,12 +20,4 @@
 
 ## [Build](#build)
 
-```bash
-make help
-```
-
-To build a specific IMAGE, run; where service is one in the docker-compose.yml:
-
-```bash
-make build IMAGE=service
-```
+If you're looking to build these yourself. I recommend looking at the dockerfile and looking at the ARGS available, then plainly build them using docker's container build system.
