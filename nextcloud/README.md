@@ -19,7 +19,7 @@ To utilize occ you will need to run a command on the host or utilize the occ app
 
 ## Cronjob
 
-Preferred method is to create a cronjob on the host that checks if the container is running every 5 minutes. If it is run `docker exec -u www-data Nextcloud php cron.php`  
+Preferred method is to create a cronjob on the host that checks if the container is running every 5 minutes. If it is run `docker exec -u www-data Nextcloud php cron.php`
 
 Example script:
 
@@ -36,4 +36,12 @@ if [ -f "/var/run/dockerd.pid" ]; then
 else
     echo "Docker is not running..."
 fi
+```
+
+## Build example
+
+```bash
+docker buildx build --builder=nextcloud-builder --build-arg NC_VERSION=27 --platform=linux/amd64 -t tetricz/nextcloud:amd64-build-${env.BUILD_ID}-27 . --load
+docker buildx build --builder=nextcloud-builder --build-arg NC_VERSION=26 --platform=linux/amd64 -t tetricz/nextcloud:amd64-build-${env.BUILD_ID}-26 . --load
+docker buildx build --builder=nextcloud-builder --build-arg NC_VERSION=25 --platform=linux/amd64 -t tetricz/nextcloud:amd64-build-${env.BUILD_ID}-25 . --load
 ```

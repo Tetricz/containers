@@ -17,5 +17,3 @@ do
 	wait $killpid
 	exit 0;
 done
-
-
