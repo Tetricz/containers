@@ -41,7 +41,7 @@ fi
 ## Build example
 
 ```bash
-docker buildx build --builder=nextcloud-builder --build-arg NC_VERSION=27 --platform=linux/amd64 -t tetricz/nextcloud:amd64-build-${env.BUILD_ID}-27 . --load
-docker buildx build --builder=nextcloud-builder --build-arg NC_VERSION=26 --platform=linux/amd64 -t tetricz/nextcloud:amd64-build-${env.BUILD_ID}-26 . --load
-docker buildx build --builder=nextcloud-builder --build-arg NC_VERSION=25 --platform=linux/amd64 -t tetricz/nextcloud:amd64-build-${env.BUILD_ID}-25 . --load
+docker buildx build --build-arg NC_VERSION=27 --platform=linux/amd64 -t tetricz/nextcloud:amd64-27 . --load
+docker buildx build --build-arg NC_VERSION=26 --platform=linux/amd64 -t tetricz/nextcloud:amd64-26 . --load
+docker buildx build --build-arg NC_VERSION=25 --platform=linux/amd64 -t tetricz/nextcloud:amd64-25 . --load
 ```
