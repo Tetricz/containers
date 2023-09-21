@@ -5,16 +5,12 @@ NC='\033[0m' # No Color
 
 echo -e "Building images"
 docker buildx build --platform=linux/amd64 -t tetricz/minecraft:amd64 main-general/. --load
-
 docker buildx build --platform=linux/amd64 -t tetricz/ferium:amd64 ferium/. --load
-
 docker buildx build --platform=linux/amd64 -t tetricz/velocity:amd64 velocity/. --load
 
 echo -e "Pushing images"
 docker push tetricz/minecraft:amd64
-
 docker push tetricz/ferium:amd64
-
 docker push tetricz/velocity:amd64
 
 echo -e "Creating manifest"
