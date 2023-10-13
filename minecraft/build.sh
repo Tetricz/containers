@@ -17,9 +17,6 @@ docker buildx build --platform=linux/arm64 -t tetricz/minecraft:arm64 --load mai
 docker buildx build --platform=linux/arm64 --build-arg="-arm64"  -t tetricz/ferium:arm64 --load ferium/.
 #docker buildx build --platform=linux/arm64 -t tetricz/velocity:arm64 --load velocity/.
 
-echo -e "Removing Builder"
-docker buildx rm mc-multi-arch-builder
-
 echo -e "Pushing images"
 docker push tetricz/minecraft:amd64
 docker push tetricz/ferium:amd64
@@ -43,11 +40,14 @@ docker manifest rm tetricz/velocity:latest
 
 echo -e "Do you want to clean the file system?"
 echo -e "Warning this will run ${RED}docker system prune -fa${NC}"
+echo -e "And remove the builder ${RED}mc-multi-arch-builder${NC}"
 read -p "Continue (y/N)?" choice
 
 if [[ $choice =~ ^[Yy]$ ]]; then
     echo -e "Cleaning docker system"
     docker system prune -fa
+    echo -e "Removing Builder"
+    docker buildx rm mc-multi-arch-builder
 fi
 
 if [[ $choice =~ ^[Nn]$ ]]; then
