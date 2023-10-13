@@ -11,7 +11,7 @@ ARG ARCHITECTURE=
 ARG UID=1000
 ARG GID=1000
 
-RUN apk add --no-cache curl bash openjdk17-jre-headless unzip libstdc++
+RUN apk add --no-cache curl bash openjdk17-jre-headless unzip libstdc++ eudev-dev
 RUN curl --connect-timeout 5 --retry 5 -proto '=https' -tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile=minimal
 
 ENV MEMORY=2G \
@@ -31,7 +31,6 @@ RUN unzip "ferium-linux*.zip" -d /usr/bin/
 RUN rm ferium*.zip
 
 COPY --chmod=777 ./entrypoint.sh /entrypoint.sh
-COPY --chmod=777 ./start.sh /start.sh
 COPY --chmod=777 ./update.sh /update.sh
 COPY --chmod=777 ./auto-script.sh /auto-script.sh
 
@@ -43,4 +42,3 @@ EXPOSE 25565/tcp 25565/udp 25575/tcp
 WORKDIR /minecraft/
 
 ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "/start.sh" ]

@@ -16,7 +16,6 @@ RUN apk add --no-cache openjdk17-jre-headless bash curl libstdc++
 
 COPY --from=builder /velocity/proxy/build/libs/velocity*all.jar /velocity.jar
 COPY --chmod=755 entrypoint.sh /entrypoint.sh
-COPY --chmod=755 start.sh /start.sh
 
 ENV MEMORY=1G \
     UID=${UID} \
