@@ -17,7 +17,7 @@ echo -e "GID: $(id -g velocity)"
 
 echo -e "Starting proxy server..."
 
-su "velocity" -c "exec /usr/bin/java -Xms${MEMORY} -Xmx${MEMORY} -XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:+UnlockExperimentalVMOptions -XX:+ParallelRefProcEnabled -XX:+AlwaysPreTouch -XX:MaxInlineLevel=15 -jar /velocity.jar & echo $! > /tmp/server.pid"
+su "velocity" -c "exec /usr/bin/java -Xms${MEMORY} -Xmx${MEMORY} -XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:+UnlockExperimentalVMOptions -XX:+ParallelRefProcEnabled -XX:+AlwaysPreTouch -XX:MaxInlineLevel=15 -jar /velocity.jar & echo \$! > /tmp/server.pid"
 
 trap "echo -e \"Stopping server...\"; kill -SIGTERM $(cat /tmp/server.pid); exit 0" SIGINT SIGTERM
 while [ -e /proc/$(cat /tmp/server.pid) ]; do
