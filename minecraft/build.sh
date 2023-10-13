@@ -4,8 +4,8 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 echo -e "Creating Builder"
-docker run --rm --privileged docker/binfmt:66f9012c56a8316f9244ffd7622d7c21c1f6f28d
-docker buildx create --name multi-arch-builder --bootstrap --use
+bash -c ../multi-arch.sh
+docker buildx create --name mc-multi-arch-builder --bootstrap --use
 docker buildx inspect --bootstrap
 
 echo -e "Building images"
@@ -18,7 +18,7 @@ docker buildx build --platform=linux/arm64 --build-arg="-arm64"  -t tetricz/feri
 #docker buildx build --platform=linux/arm64 -t tetricz/velocity:arm64 --load velocity/.
 
 echo -e "Removing Builder"
-docker buildx rm builder
+docker buildx rm mc-multi-arch-builder
 
 echo -e "Pushing images"
 docker push tetricz/minecraft:amd64

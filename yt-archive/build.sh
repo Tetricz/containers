@@ -3,9 +3,17 @@
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+echo -e "Creating Builder"
+bash -c ../multi-arch.sh
+docker buildx create --name yt-multi-arch-builder --bootstrap --use
+docker buildx inspect --bootstrap
+
 echo -e "Building images"
 docker buildx build --platform=linux/amd64 -t tetricz/yt-archive:amd64 . --load
 docker buildx build --platform=linux/arm64 -t tetricz/yt-archive:arm64 . --load
+
+echo -e "Removing Builder"
+docker buildx rm yt-multi-arch-builder
 
 echo -e "Pushing images"
 docker push tetricz/yt-archive:amd64
