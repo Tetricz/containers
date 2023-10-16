@@ -48,8 +48,9 @@ fi
 
 chown -R ${UID}:${GID} /minecraft/
 
-su "minecraft" -c "exec /auto-script.sh"
+su "minecraft" -c "exec /auto-script.sh pre"
 su "minecraft" -c "exec /update.sh"
+su "minecraft" -c "exec /auto-script.sh post"
 echo -e "Starting server..."
 su "minecraft" -c "exec /usr/bin/java -Xmx${MEMORY} -Xms${MEMORY} -jar fabric-server-launch.jar & echo \$! > /tmp/server.pid"
 

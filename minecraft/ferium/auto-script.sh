@@ -1,11 +1,15 @@
 #!/bin/bash
 
-echo -e "Loading custom bash scripts..."
-echo -e "Container-Dir: $(pwd)/scripts/"
+if [ -d ! "/minecraft/$1-scripts" ]; then
+    mkdir /minecraft/$1-scripts
+fi
 
-for file in $(ls scripts | grep -E ".*\.sh");
+echo -e "Loading $1-upgrade scripts..."
+echo -e "Container-Dir: <minecraft-volume>/$1-scripts/"
+
+for file in $(ls $1-scripts | grep -E ".*\.sh");
 do
-    chmod +x /minecraft/scripts/$file
+    chmod +x /minecraft/$1-scripts/$file
     echo -e "Loading script: $file"
-    source /minecraft/scripts/$file
+    source /minecraft/$1-scripts/$file
 done
