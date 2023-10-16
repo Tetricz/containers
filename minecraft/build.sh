@@ -9,11 +9,11 @@ docker buildx create --name mc-multi-arch-builder --bootstrap --use
 docker buildx inspect --bootstrap
 
 echo -e "Building images"
-docker buildx build --platform=linux/amd64 -t tetricz/minecraft:amd64 --load main-general/.
+docker buildx build --platform=linux/amd64 -t tetricz/minecraft:amd64 --load base/.
 docker buildx build --platform=linux/amd64 -t tetricz/ferium:amd64 --load ferium/.
 docker buildx build --platform=linux/amd64 -t tetricz/velocity:amd64 --load velocity/.
 
-docker buildx build --platform=linux/arm64 -t tetricz/minecraft:arm64 --load main-general/.
+docker buildx build --platform=linux/arm64 -t tetricz/minecraft:arm64 --load base/.
 docker buildx build --platform=linux/arm64 --build-arg="-arm64"  -t tetricz/ferium:arm64 --load ferium/.
 #docker buildx build --platform=linux/arm64 -t tetricz/velocity:arm64 --load velocity/.
 
