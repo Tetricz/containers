@@ -9,9 +9,7 @@ ENV MEMORY=2G \
     UID=1000
 
 COPY --chmod=777 ./entrypoint.sh /entrypoint.sh
-COPY --chmod=777 ./start.sh /start.sh
 
 WORKDIR /minecraft/
 
 ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "/start.sh" ]

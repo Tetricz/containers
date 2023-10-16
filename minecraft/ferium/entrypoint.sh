@@ -54,8 +54,14 @@ su "minecraft" -c "exec /auto-script.sh post"
 echo -e "Starting server..."
 su "minecraft" -c "exec /usr/bin/java -Xmx${MEMORY} -Xms${MEMORY} -jar fabric-server-launch.jar & echo \$! > /tmp/server.pid"
 
-trap "echo -e \"Stopping server...\"; kill -SIGTERM $(cat /tmp/server.pid); exit 0" SIGINT SIGTERM
+trap_handler () {
+    echo -e "Stopping server..."
+    kill -SIGTERM $(cat /tmp/server.pid)
+    echo -e "Server stopped."
+    exit 0
+}
+
+trap trap_handler SIGINT SIGTERM
 while [ -e /proc/$(cat /tmp/server.pid) ]; do
     sleep 0.5
 done
-echo -e "Server stopped."

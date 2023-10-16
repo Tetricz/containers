@@ -16,4 +16,17 @@ fi
 echo -e "UID: $(id -u minecraft)"
 echo -e "GID: $(id -g minecraft)"
 
-su "minecraft" -c "exec \"$@\""
+echo -e "Starting server..."
+su "minecraft" -c "/usr/bin/java -Xmx${MEMORY} -Xms${MEMORY} -jar ${JARFILE} & echo \$! > /tmp/server.pid"
+
+trap_handler () {
+    echo -e "Stopping server..."
+    kill -SIGTERM $(cat /tmp/server.pid)
+    echo -e "Server stopped."
+    exit 0
+}
+
+trap trap_handler() SIGINT SIGTERM
+while [ -e /proc/$(cat /tmp/server.pid) ]; do
+    sleep 0.5
+done
