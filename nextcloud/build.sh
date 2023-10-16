@@ -3,6 +3,11 @@
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+echo -e "Creating Builder"
+bash -c ../multi-arch.sh
+docker buildx create --name nc-multi-arch-builder --bootstrap --use
+docker buildx inspect --bootstrap
+
 echo -e "Building images"
 docker buildx build --build-arg NC_VERSION=27 --platform=linux/amd64 -t tetricz/nextcloud:amd64-27 . --load
 docker buildx build --build-arg NC_VERSION=26 --platform=linux/amd64 -t tetricz/nextcloud:amd64-26 . --load
@@ -25,10 +30,9 @@ read -p "Continue (y/N)?" choice
 if [[ $choice =~ ^[Yy]$ ]]; then
     echo -e "Cleaning docker system"
     docker system prune -fa
+    echo -e "Removing Builder"
+    docker buildx rm nc-multi-arch-builder
+    exit 0
 fi
 
-if [[ $choice =~ ^[Nn]$ ]]; then
-    echo -e "Skipping cleaning docker system"
-else
-    echo -e "Skipping cleaning docker system"
-fi
+echo -e "Skipping cleaning docker system"

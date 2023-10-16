@@ -12,9 +12,6 @@ echo -e "Building images"
 docker buildx build --platform=linux/amd64 -t tetricz/yt-archive:amd64 . --load
 docker buildx build --platform=linux/arm64 -t tetricz/yt-archive:arm64 . --load
 
-echo -e "Removing Builder"
-docker buildx rm yt-multi-arch-builder
-
 echo -e "Pushing images"
 docker push tetricz/yt-archive:amd64
 docker push tetricz/yt-archive:arm64
@@ -31,10 +28,9 @@ read -p "Continue (y/N)?" choice
 if [[ $choice =~ ^[Yy]$ ]]; then
     echo -e "Cleaning docker system"
     docker system prune -fa
+    echo -e "Removing Builder"
+    docker buildx rm yt-multi-arch-builder
+    exit 0
 fi
 
-if [[ $choice =~ ^[Nn]$ ]]; then
-    echo -e "Skipping cleaning docker system"
-else
-    echo -e "Skipping cleaning docker system"
-fi
+echo -e "Skipping cleaning docker system"
