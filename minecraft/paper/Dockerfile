@@ -19,7 +19,8 @@ RUN apk add --no-cache openjdk17-jre-headless bash curl libstdc++ libc6-compat e
 COPY --chmod=755 --from=builder /paper/build/libs/paper*.jar /paper.jar
 COPY --chmod=755 entrypoint.sh /entrypoint.sh
 
-ENV UID=${UID} \
+ENV MEMORY=1G \
+    UID=${UID} \
     GID=${GID}
 
 WORKDIR /minecraft/
