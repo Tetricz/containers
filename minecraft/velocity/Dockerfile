@@ -24,4 +24,3 @@ ENV MEMORY=1G \
 WORKDIR /config/
 
 ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "/start.sh" ]
