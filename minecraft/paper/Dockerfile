@@ -9,7 +9,7 @@ RUN git config --global user.email "anonymous"
 RUN git config --global user.name "anonymous"
 RUN cd /paper && ./gradlew applyPatches && ./gradlew createReobfBundlerJar
 
-FROM tetricz/autoplug:amd64
+FROM alpine:latest
 
 ARG UID=1000
 ARG GID=1000

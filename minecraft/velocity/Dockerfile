@@ -7,7 +7,7 @@ RUN apt-get install -y git
 RUN git clone https://github.com/PaperMC/Velocity.git /velocity
 RUN cd /velocity && ./gradlew build
 
-FROM tetricz/autoplug:amd64
+FROM alpine:latest
 
 ARG UID=1000
 ARG GID=1000
