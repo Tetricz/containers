@@ -1,24 +1,20 @@
 FROM cm2network/steamcmd:root
 
 ENV ADMIN_PWD="soopasafe" \
-    GAME_PARAMS="-servername DockerServer" \
-    UID=1000 \
-    GID=1000
+    GAME_PARAMS="-servername DockerServer"
 
 RUN apt-get update \
-    && apt-get install screen watchdog -y \
+    && apt-get upgrade -y \
+    && apt-get install libsm6 libxext6 libxrender-dev -y \
     && apt-get remove --purge --auto-remove -y \
 	&& rm -rf /var/lib/apt/lists/*
 
-COPY  --chown=steam:steam --chmod=755 ./appdata/start.sh            /bin/start.sh
-COPY  --chown=steam:steam --chmod=755 ./appdata/start-server.sh     /bin/start-server.sh
-COPY  --chown=steam:steam --chmod=755 ./appdata/start-watchdog.sh   /bin/start-watchdog.sh
 COPY  --chown=steam:steam --chmod=755 ./appdata/entrypoint.sh       /bin/entrypoint.sh
+COPY  --chown=steam:steam --chmod=755 ./appdata/entrypoint-wrapper.sh /bin/entrypoint-wrapper.sh
 COPY  --chown=steam:steam --chmod=666 ./appdata/app_update          /home/steam/steamcmd/app_update
 
 WORKDIR "/"
 
 EXPOSE 16261/tcp 16261/udp 16262/tcp 16262/udp
 
-ENTRYPOINT [ "/bin/entrypoint.sh" ]
-CMD [ "/bin/start.sh" ]
+ENTRYPOINT [ "/bin/entrypoint-wrapper.sh" ]
