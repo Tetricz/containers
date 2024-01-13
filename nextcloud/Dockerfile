@@ -45,6 +45,7 @@ RUN set -ex; \
         libxml2-dev \
         libzip-dev \
         smbclient \
+        bzip2 \
     ; \
     \
     debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)"; \
@@ -62,6 +63,7 @@ RUN set -ex; \
         pdo_mysql \
         pdo_pgsql \
         sysvsem \
+        bz2 \
         zip \
         # smbclient \
     ; \
