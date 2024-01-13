@@ -20,14 +20,14 @@ if "${INST_DIR}/jre64/bin/java" -version > /dev/null 2>&1; then
 	export LD_LIBRARY_PATH="${INST_DIR}/linux64:${INST_DIR}/natives:${INST_DIR}:${INST_DIR}/jre64/lib/:${LD_LIBRARY_PATH}"
 	LIBPZXINIT="libPZXInitThreads64.so"
 	JSIG="libjsig.so"
-	LD_PRELOAD="${LD_PRELOAD}:${JSIG}:${LIBPZXINIT}" "${INST_DIR}ProjectZomboid64" -adminpassword "${ADMIN_PWD}" "${GAME_PARAMS}"
+	LD_PRELOAD="${LD_PRELOAD}:${JSIG}:${LIBPZXINIT}" "${INST_DIR}ProjectZomboid64" -adminpassword ${ADMIN_PWD} ${GAME_PARAMS}
 elif "${INST_DIR}/jre/bin/java" -client -version > /dev/null 2>&1; then
 	echo "32-bit java detected"
 	export PATH="${INST_DIR}/jre/bin:$PATH"
 	export LD_LIBRARY_PATH="${INST_DIR}/linux32:${INST_DIR}/natives:${INST_DIR}:${INST_DIR}/jre/lib/:${LD_LIBRARY_PATH}"
 	LIBPZXINIT="libPZXInitThreads64.so"
 	JSIG="libjsig.so"
-	LD_PRELOAD="${LD_PRELOAD}:${JSIG}:${LIBPZXINIT}" "${INST_DIR}ProjectZomboid32" -adminpassword "${ADMIN_PWD}" "${GAME_PARAMS}"
+	LD_PRELOAD="${LD_PRELOAD}:${JSIG}:${LIBPZXINIT}" "${INST_DIR}ProjectZomboid32" -adminpassword ${ADMIN_PWD} ${GAME_PARAMS}
 else
 	echo "couldn't determine 32/64 bit of java"
 fi
